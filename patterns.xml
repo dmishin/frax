@@ -1,0 +1,4 @@
+<patterns>
+<pattern NAME="Cold"><color POS="0" VALUE="010101"/><color POS="256" VALUE="001fff"/><color POS="512" VALUE="00fff9"/><color POS="758" VALUE="fefefe"/>
+</pattern>
+</patterns>

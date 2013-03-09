@@ -1,0 +1,260 @@
+<package name="builtin">
+<!-- Format is following:
+<renderer>
+  <name>Mandelbrot</name>
+  <description>Classic Mandelbrot set renderer</description>
+  <class>ratson.genimageexplorer.generators.MandelbrotGenerator</class>
+  <parameters>
+    <int name="MaxIters">Max iters</int>
+    <boolean get="isSmooth" set="setSmooth">Smoothing</boolean>
+    <double name="RMax" min="2.0" max="15" control="slider">Flyout radius</double>
+    <option name=><title>asd</title><value>asd</value>
+    <push action="as">asd</push>
+    </option>
+  </parameters>
+</renderer>
+-->
+
+<pattern>
+  <name>Editable</name>
+  <description>Editable pattern</description>
+  <class>ratson.genimageexplorer.EditablePattern</class>
+  <parameters>
+    <double name="CycleSpeed">Cycle speed</double>
+    <double name="Offset" min="0.0" max="1.0" control="slider">Offset</double>
+    <push action="doEdit">Edit pattern</push>
+  </parameters>
+</pattern>
+
+<renderer>
+	<name>Nelder-Mead</name>
+	<class>ratson.genimageexplorer.generators.NelderMeadGenerator</class>
+	<parameters>
+		<boolean name="MoveAllPoints">Move all initial points</boolean>
+		<boolean name="ReturningSteps">Return iterations / Final x</boolean>
+		<int name="TargetFunctionIndex" min="0" max="4" control="field">Target function(0-4)</int>
+		<group name="Point 1">
+		<double name="X0" control="field">x0</double>
+		<double name="Y0" control="field">y0</double>
+		</group>
+		<group name="Point 2">		
+		<double name="X1" control="field">x1</double>
+		<double name="Y1" control="field">y1</double>
+		</group>
+		<group name="Method parameters">
+		<double name="Alpha" control="field">alpha</double>
+		<double name="Beta" control="field">beta</double>
+		<double name="Gamma" control="field">gamma</double>
+		<double name="Delta" control="field">delta</double>
+		</group>
+		
+		<double name="Eps" min="1e-14" max="1.0" control="field">Eps</double>
+		
+		<int name="MaxIter" min="1" max="1000000" control="field">Max. iterations</int>
+
+	</parameters>
+</renderer>
+
+<renderer>
+  <name>Soddy</name>
+  <description>Appollonius circles</description>
+  <class>ratson.genimageexplorer.generators.SoddyCirclesGenerator</class>
+  <parameters>
+    <int name="MaxIter" min="1">Iterations</int>
+    <boolean name="CircleMode">Circular mode</boolean>
+  </parameters>
+</renderer>
+<renderer>
+  <name>Soddy (Mandelbrot mode)</name>
+  <description>Soddy (Mandelbrot mode)</description>
+  <class>ratson.genimageexplorer.generators.SoddyMandelbrotGenerator</class>
+  <parameters>
+    <int name="MaxIter" min="1">Iterations</int>
+    <boolean name="CircleMode">Circular mode</boolean>
+    <group name="Offset">
+      <double name="X0">X0</double>
+      <double name="Y0">X0</double>
+    </group>
+  </parameters>
+</renderer>
+
+<renderer>
+  <name>Janino script compiler</name>
+  <description>Universal generator, based on Janino embedded java compiler</description>
+  <class>ratson.genimageexplorer.generators.janino.UniversalJaninoGenerator</class>
+  <parameters>
+    <int name="MaxIter" min="1">Iterations</int>
+    <group name="Additional">
+      <double name="P1">P1</double>
+      <double name="P2">P2</double>
+      <double name="P3">P3</double>
+    </group>
+    <push action="doEditScript">Edit script</push> 
+    </parameters>
+</renderer>
+
+
+<pattern>
+  <name>Smooth</name>
+  <description>Predefined smooth pattern with sinusoidal color profiles</description>
+  <class>ratson.genimageexplorer.SmoothColorPattern</class>
+  <parameters>
+    <double name="K">Cycle speed</double>
+    <double name="Shift" min="0.0" max="1.0" control="slider">Offset</double>
+  </parameters>
+</pattern>
+    
+<renderer>
+  <name>Mandelbrot - exponent</name>
+  <class>ratson.genimageexplorer.extra.MandelExpGenerator</class>
+  <description></description>
+  <parameters>
+    <int name = "MaxIters" min="1">Max iterations</int>
+    <double name="R2Max" min="2" >Flyout radius</double>
+  </parameters>
+</renderer>
+<renderer>
+  <name>Mandelbrot</name>
+  <description>Classic Mandelbrot set renderer</description>
+  <class>ratson.genimageexplorer.generators.MandelbrotGenerator</class>
+  <parameters>
+    <int name="MaxIters">Max iters</int>
+    <boolean get="isSmooth" set="setSmooth">Smoothing</boolean>
+    <double name="RMax" min="2.0" max="15" control="slider">Flyout radius</double>
+  </parameters>
+</renderer>
+
+<renderer>
+  <name>Mandelbar</name>
+  <description>Mandelbar set</description>
+  <class>ratson.genimageexplorer.generators.MandelBarGenerator</class>
+  <parameters>
+    <int name="MaxIters">Max iters</int>
+    <boolean get="isSmooth" set="setSmooth">Smoothing</boolean>
+    <double name="RMax" min="2.0" max="15" control="slider">Flyout radius</double>
+  </parameters>
+</renderer>
+
+<renderer>
+  <name>Collatz</name>
+  <description>Collatz runaway fractal</description>
+  <class>ratson.genimageexplorer.extra.CollatzFractal</class>
+  <parameters>
+    <int name="MaxIters">Max iters</int>
+    <boolean get="isSmooth" set="setSmooth">Smoothing</boolean>
+    <boolean get="isMandelbrotMode" set="setMandelbrotMode">Mandelbrot mode</boolean>
+    <double name="RMax" min="2.0" max="100" control="slider">Flyout radius</double>
+  </parameters>
+</renderer>
+
+<renderer>
+  <name>Drowning ship</name>
+  <description>Drowning ship fractal (Mandelbrot variation)</description>
+  <class>ratson.genimageexplorer.generators.DrowningShipGenerator</class>
+  <parameters>
+    <int name="MaxIters">Max iters</int>
+    <boolean get="isSmooth" set="setSmooth">Smoothing</boolean>
+    <double name="RMax" min="2.0" max="15" control="slider">Flyout radius</double>
+  </parameters>
+</renderer>
+
+
+<renderer>
+  <name>Billiard fractal</name>
+  <description>Images, produced by measuring travel time of a bal in a ideal billiard</description>
+  <class>ratson.genimageexplorer.extra.BilliardBallGenerator</class>
+  <parameters>
+    <int name="BallNum" min="1" max="20">Number of balls</int>
+    <int name="MaxIter" min="1" max="1000000">Maximum iterations count</int>
+    <int name="Seed" >Random seed</int>
+  </parameters>
+</renderer>
+
+<renderer>
+  <name>Mandelbrot N</name>
+  <description>N'th power Mandelbrot</description>
+  <class>ratson.genimageexplorer.generators.MandelbrotN</class>
+  <parameters>
+    <int name="Power" min="2" max="200">Power</int>
+    <int name="MaxIters">Max iters</int>
+    <boolean get="isSmooth" set="setSmooth">Smoothing</boolean>
+    <double name="RMax" min="2.0" max="15" control="slider">Flyout radius</double>
+  </parameters>
+</renderer>
+<renderer>
+  <name>Mandelbrot M/N</name>
+  <description>N'th and M'yh power Mandelbrot, interleaved</description>
+  <class>ratson.genimageexplorer.generators.InterleavingMandelbrot</class>
+  <parameters>
+    <int name="Power1" min="2" max="200">Power 1</int>
+    <int name="Power2" min="2" max="200">Power 2</int>
+    <int name="MaxIters">Max iters</int>
+    <boolean get="isSmooth" set="setSmooth">Smoothing</boolean>
+    <double name="RMax" min="2.0" max="15" control="slider">Flyout radius</double>
+  </parameters>
+</renderer>
+
+
+<!--  Julia sets -->
+<renderer>
+  <name>Julia</name>
+  <description>Julia set</description>
+  <class>ratson.genimageexplorer.generators.JuliaGenerator</class>
+  <parameters>
+    <double name="Cx" min="-5" max="5">Re(C)</double>
+    <double name="Cy" min="-5" max="5">Im(C)</double>
+    <int name="MaxIters">Max iters</int>
+    <boolean get="isSmooth" set="setSmooth">Smoothing</boolean>
+    <double name="RMax" min="2.0" max="15" control="slider">Flyout radius</double>
+  </parameters>
+</renderer>
+
+
+<renderer>
+  <name>Hilbert 3d → 2d unwrap</name>
+  <description>Result of unwrapping 3D sphere to 2D plane, using Hilbert curves</description>
+  <class>ratson.genimageexplorer.extra.HilbertUnwrap</class>
+  <parameters>
+    <group name="Sphere center">
+	    <double name="X0" min="0" max="1" control="slider">X</double>
+	    <double name="Y0" min="0" max="1" control="slider">Y</double>
+	    <double name="Z0" min="0" max="1" control="slider">Z</double>
+	</group>
+    <double name="R" min="0" max="1" control="slider">Sphere radius</double>
+  </parameters>
+</renderer>
+
+<renderer>
+  <name>Pentagonal filling of hyperbolic space</name>
+  <description>Pentagonal filling of hyperbolic space</description>
+  <class>ratson.genimageexplorer.extra.KleinSpaceFilling</class>
+  <parameters>
+    <boolean get="isKleinProjection" set="setKleinProjection">Use Klein projection (Poincaré otherwice)</boolean>
+    <int name="MaxIters">Iterations</int>
+  </parameters>
+</renderer>
+
+<!--
+<renderer>
+  <name>Universal</name>
+  <description>Universal scripted generator (slow!)</description>
+  <class>ratson.genimageexplorer.generators.universal.UniversalGenerator</class>
+  <parameters>
+    <int name="MaxIter">Iterations</int>
+    <push action="editScript">Edit script</push>
+  </parameters>
+
+</renderer>
+
+-->
+<renderer>
+  <name>3 body problem</name>
+  <description>Generator, based of numeric solution of limited 3-body problem</description>
+  <class>ratson.genimageexplorer.extra.ThreeBodiesProblemGenerator</class>
+  <parameters>
+    <double name="TMax" min="0">T max</double>
+    <double name="Dt" min="0.0001">dt</double>
+  </parameters>
+</renderer>
+
+</package>

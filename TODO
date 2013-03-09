@@ -1,0 +1,24 @@
+TODO list:
+
+[x] Progress indication
+[x] Multithreaded rendering
+[x] Apply patter in separate thread
+[x] Button controls
+[x] boolean controls
+[x] Select renderer
+[x] Additional patterns
+[x] select pattern
+[ ] Load external renderer and pattern classes from jar file
+[ ] Optimized rendering
+[ ] anti-aliasing
+[ ] Better value update
+[x] proportional zoom, navigation tools
+[ ] Icons
+[ ] Initial location specified for renderer
+[ ] Differential filter
+[x] Fast universal interpreter !!
+[ ] Neat script editor
+[ ] Better error reporting
+[ ] Navigation: back button.
+[ ] Script parser
+[ ] animation

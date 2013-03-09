@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path=""/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Utils"/>
+	<classpathentry kind="lib" path="/home/dim/Soft/janino-2.5.15/lib/janino.jar" sourcepath="/home/dim/soft/janino-2.5.15/src"/>
+	<classpathentry kind="lib" path="/home/dim/Dropbox/Soft/jfrac/nanoxml-lite-2.2.3.jar"/>
+	<classpathentry kind="output" path=""/>
+</classpath>

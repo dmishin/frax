@@ -1,0 +1,24 @@
+//free parameters are: p1, p2, p3
+//return value: f
+//iterations count: maxIters
+
+double xn=0,yn=0, xx=0;
+
+double x2=0,y2=0;
+int iter = 0;
+
+while (x2+y2<1000 && iter<maxIters){
+  xx=x2-y2+x;
+  yn=2*xn*yn+y;
+  xn=xx;
+  
+  iter=iter+1;
+  x2=sqr(xn);y2=sqr(yn);
+}
+
+if (iter >= maxIters){
+  f = -1;
+}else{
+  f = iter-log(log(x2+y2))/log(2);
+}
+

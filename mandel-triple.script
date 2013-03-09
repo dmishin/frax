@@ -1,0 +1,32 @@
+f = x;
+
+double xn=0,yn=0, xx=0;
+double xm=0,ym=0;
+double xk=0,yk=0;
+
+double x2=0,y2=0;
+int iter = 0;
+while (x2+y2<1000 && iter<maxIters){
+  xx = xk*xk-yk*yk + x;
+  yk = 2*xk*yk + y;
+  xk = xx;
+  
+
+  xx = xm*xm-ym*ym+xk;
+  ym = 2*xm*ym + yk;
+  xm = xx;
+
+  xx=x2-y2+xm;
+  yn=2*xn*yn+ym;
+  xn=xx;
+
+  iter=iter+1;
+  x2=xn*xn;y2=yn*yn;
+}
+
+if (iter >= maxIters){
+  f = -1;
+}else{
+  f = iter-log(log(x2+y2))/log(2);
+}
+
