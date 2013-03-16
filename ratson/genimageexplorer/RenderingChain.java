@@ -6,7 +6,7 @@ import ratson.genimageexplorer.generators.AbstractGenerator;
 import ratson.genimageexplorer.generators.RendererException;
 import ratson.utils.FloatMatrix;
 
-public class RenderingChain implements AbstractRendererChain {
+public class RenderingChain {
 	private AbstractGenerator generator;
 	private FloatMatrix rawImage;
 	private ColorPattern colorizer;

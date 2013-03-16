@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -43,13 +42,11 @@ import javax.swing.border.TitledBorder;
 
 import nanoxml.XMLElement;
 import nanoxml.XMLParseException;
-import ratson.genimageexplorer.AbstractRendererChain;
 import ratson.genimageexplorer.ColorPattern;
 import ratson.genimageexplorer.ObservationArea;
 import ratson.genimageexplorer.RenderingChain;
 import ratson.genimageexplorer.XMLFormatException;
 import ratson.genimageexplorer.generators.AbstractGenerator;
-import ratson.genimageexplorer.generators.MandelbrotGenerator;
 import ratson.genimageexplorer.generators.RendererException;
 import ratson.genimageexplorer.gui.dialogs.ResolutionSetterDlg;
 import ratson.genimageexplorer.gui.mousetools.AbstractMouseTool;
@@ -87,7 +84,7 @@ public class ExplorerMainFrame extends JFrame {
 	}
 	
 	private ObservationArea location=new ObservationArea();
-	private AbstractRendererChain renderer = new RenderingChain();
+	private RenderingChain renderer = new RenderingChain();
 	
 	private PatternRendererThread patternRenderer;
 

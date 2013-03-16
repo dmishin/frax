@@ -1,13 +1,8 @@
 package ratson.genimageexplorer.gui;
 
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-
 import javax.swing.SwingUtilities;
 
-import ratson.genimageexplorer.AbstractRendererChain;
-import ratson.genimageexplorer.ColorPattern;
-import ratson.utils.FloatMatrix;
+import ratson.genimageexplorer.RenderingChain;
 
 /**class that performs asynchronous pattern rendering
  * When the thread is woken, it applies pattern, requests image update and sleeps again.
@@ -19,9 +14,9 @@ import ratson.utils.FloatMatrix;
 public class PatternRendererThread implements Runnable{
 
 	private Runnable uiUpdater;
-	private AbstractRendererChain renderer;
+	private RenderingChain renderer;
 	
-	public PatternRendererThread(AbstractRendererChain renderer, Runnable onFinish){
+	public PatternRendererThread(RenderingChain renderer, Runnable onFinish){
 		uiUpdater = onFinish;
 		this.renderer = renderer;
 	}
