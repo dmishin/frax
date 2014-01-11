@@ -3,7 +3,7 @@ package ratson.genimageexplorer.generators;
 public abstract class MandelbrotLike implements FunctionFactory {
 
 	protected int maxIters = 100;
-	protected double r2Max;
+	protected double r2Max = 4;
 	protected boolean isSmooth = true;
 	protected double ln_ln_r2max;
 	protected static final double ln2 = Math.log(2);

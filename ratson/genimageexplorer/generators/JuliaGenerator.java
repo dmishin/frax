@@ -58,8 +58,7 @@ public class JuliaGenerator extends MandelbrotLike {
 		}
 		
 	}
-	Func instance = new Func();
 	public Function get() {
-		return instance;
+		return new Func();
 	}
 }
