@@ -36,12 +36,6 @@ public class RenderingChain {
 		renderer.render(area, rawImage, onFinish);
 	}
 
-	/**returns true, if chain is ready to render the data*/
-	private boolean checkChain() {
-		return renderer.getFunction() != null && rawImage!= null &&
-		colorizer != null && image != null;
-	}
-
 	/* (non-Javadoc)
 	 * @see ratson.genimageexplorer.AbstractRendererChain#setResolution(int, int)
 	 */

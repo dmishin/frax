@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+@SuppressWarnings("serial")
 public class ParameterModel implements Serializable{
 	HashMap<String, Integer> parameterIndices=new HashMap<String, Integer>();
 	LinkedList<String> paramNames = new LinkedList<String>();

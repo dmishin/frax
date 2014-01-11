@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import nanoxml.XMLElement;
-
 import ratson.genimageexplorer.generators.Renderer;
 import ratson.genimageexplorer.gui.PatternEditorControl;
 import ratson.genimageexplorer.gui.dialogs.PatternEditor;
@@ -23,12 +22,12 @@ public class EditablePattern extends ColorPattern {
 	
 	
 	public ColorPicker picker(int index){
-		return (ColorPicker)pickers.get(index);
+		return pickers.get(index);
 	}
 
 	public static final int MAX_K = 65536;
 	
-	private ArrayList pickers = new ArrayList();;
+	private ArrayList<ColorPicker> pickers = new ArrayList<ColorPicker>();
 	private int[] colorTable = new int[MAX_POS];
 
 	public static final int MAX_POS = 1024;
@@ -101,9 +100,8 @@ public class EditablePattern extends ColorPattern {
 
 	public void normalize(){
 		//sorting array
-		Collections.sort(pickers, new Comparator(){
-			public int compare(Object arg0, Object arg1) {
-				ColorPicker p1=(ColorPicker)arg0, p2=(ColorPicker)arg1;
+		Collections.sort(pickers, new Comparator<ColorPicker>(){
+			public int compare(ColorPicker p1, ColorPicker p2) {
 				if (p1.position<p2.position)
 					return -1;
 				if (p1.position>p2.position)
@@ -130,12 +128,12 @@ public class EditablePattern extends ColorPattern {
 	public void loadXML(XMLElement root) throws PatternFormatException{
 		if (!root.getName().equals("pattern"))
 			throw new PatternFormatException(root.toString());
-		Enumeration children = root.enumerateChildren();
+		Enumeration<XMLElement> children = (Enumeration<XMLElement>)root.enumerateChildren();
 		
 		pickers.clear();
 		
 		while (children.hasMoreElements()){
-			XMLElement child = (XMLElement)children.nextElement();
+			XMLElement child = children.nextElement();
 			if (child.getName().equals("color")){
 				String pos = child.getStringAttribute("pos");
 				String val = child.getStringAttribute("value");
@@ -309,7 +307,7 @@ public class EditablePattern extends ColorPattern {
 		return idx;
 	}
 	private void swapPickers(int i, int j) {
-		Object buf=pickers.get(i);
+		ColorPicker buf=pickers.get(i);
 		pickers.set(i, pickers.get(j));
 		pickers.set(j,buf);
 	}

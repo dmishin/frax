@@ -1,16 +1,12 @@
 package ratson.genimageexplorer;
 
 import java.io.Serializable;
-import java.text.DecimalFormat;
 import java.util.Enumeration;
-import java.util.zip.DataFormatException;
-
-import com.sun.xml.internal.txw2.annotation.XmlElement;
 
 import nanoxml.XMLElement;
-
 import ratson.utils.DoubleMatrix;
 
+@SuppressWarnings("serial")
 public class ObservationArea implements Serializable{
 	private int imgWidth;
 	private int imgHeight;

@@ -1,6 +1,5 @@
 package ratson.genimageexplorer;
 
-import java.awt.Component.BaselineResizeBehavior;
 import java.awt.image.BufferedImage;
 
 import ratson.genimageexplorer.generators.Renderer;
