@@ -1,6 +1,6 @@
 package ratson.genimageexplorer.generators;
 
-public class MandelbrotN extends MandelbrotGenerator {
+public class MandelbrotN extends MandelbrotLike {
 	private int power;	
 	private double lnN;
 
@@ -57,7 +57,6 @@ public class MandelbrotN extends MandelbrotGenerator {
 		return power;
 	}
 
-	@Override
 	public Function get() {
 		return new Func();
 	}

@@ -1,7 +1,7 @@
 package ratson.genimageexplorer.generators;
 
 
-public class DrowningShipGenerator extends MandelbrotGenerator {
+public class DrowningShipGenerator extends MandelbrotLike {
 	class Func extends Function{
 
 		@Override
@@ -34,5 +34,9 @@ public class DrowningShipGenerator extends MandelbrotGenerator {
 			}		
 		}
 		
+	}
+
+	public Function get() {
+		return new Func();
 	}
 }

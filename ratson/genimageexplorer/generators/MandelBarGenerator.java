@@ -1,6 +1,6 @@
 package ratson.genimageexplorer.generators;
 
-public class MandelBarGenerator extends MandelbrotGenerator {
+public class MandelBarGenerator extends MandelbrotLike{
 	public MandelBarGenerator(){
 	}
 	
@@ -38,7 +38,6 @@ public class MandelBarGenerator extends MandelbrotGenerator {
 		
 	};
 	Func instance = new Func();
-	@Override
 	public Function get() {
 		return instance;
 	}

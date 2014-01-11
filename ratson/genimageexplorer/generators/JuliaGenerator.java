@@ -3,7 +3,7 @@ package ratson.genimageexplorer.generators;
 import ratson.genimageexplorer.ObservationArea;
 import ratson.utils.FloatMatrix;
 
-public class JuliaGenerator extends MandelbrotGenerator {
+public class JuliaGenerator extends MandelbrotLike {
 	public JuliaGenerator(){
 	}
 	
@@ -59,7 +59,6 @@ public class JuliaGenerator extends MandelbrotGenerator {
 		
 	}
 	Func instance = new Func();
-	@Override
 	public Function get() {
 		return instance;
 	}
