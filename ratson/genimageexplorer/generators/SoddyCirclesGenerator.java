@@ -43,14 +43,9 @@ public class SoddyCirclesGenerator implements FunctionFactory {
 	}
 	
 	
-	protected void finishRendering(ObservationArea area, FloatMatrix image,
-			RenderingContext renderContext) {
-	}
-
-	private Func functionInstance = new Func();
-	
 	class Func extends Function{
 		@Override
+		public
 		float evaluate(double x, double y) {
 			int iters = 0;
 			double xx;
@@ -111,7 +106,7 @@ public class SoddyCirclesGenerator implements FunctionFactory {
 	}
 
 	public Function get() {
-		return functionInstance;
+		return new Func();
 	}
 	
 }

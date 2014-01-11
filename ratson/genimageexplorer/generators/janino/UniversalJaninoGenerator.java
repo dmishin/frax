@@ -8,12 +8,13 @@ import org.codehaus.janino.Parser.ParseException;
 import org.codehaus.janino.Scanner.ScanException;
 
 import ratson.genimageexplorer.ObservationArea;
+import ratson.genimageexplorer.generators.Function;
+import ratson.genimageexplorer.generators.FunctionFactory;
 import ratson.genimageexplorer.generators.Renderer;
-import ratson.genimageexplorer.generators.RenderingContext;
 import ratson.genimageexplorer.gui.dialogs.EditScriptDialog;
 import ratson.utils.FloatMatrix;
 
-public class UniversalJaninoGenerator extends Renderer {
+public class UniversalJaninoGenerator implements FunctionFactory {
 
 	private ScriptReference script = new ScriptReference();
 	
@@ -23,6 +24,26 @@ public class UniversalJaninoGenerator extends Renderer {
 
 	private boolean scriptCompiled = false;
 	
+	class Func extends Function{
+		public float[] resultContainer = new float[1];
+
+		@Override
+		public float evaluate(double x, double y) {
+			if (evaluator == null)
+				return Renderer.BLACK_VALUE;
+			
+			try {
+				evaluator.evaluate(new Object[]{
+						x,y,resultContainer,new Integer(maxIters), new Double(p1), new Double(p2), new Double(p3)	
+				});
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+				return Renderer.BLACK_VALUE;
+			}
+			return resultContainer[0];
+		}
+		
+	}
 	/**Converts formula from script language to java.
 	 * 
 	 * @param formula
@@ -88,17 +109,6 @@ public class UniversalJaninoGenerator extends Renderer {
 				
 	}
 	
-	protected RenderingContext prepareRendering(ObservationArea area) {
-		if (! scriptCompiled){
-			if (!compileScript()){
-				System.err.println("Script compilation failed.");
-			}
-		}
-		return new JaninoContext();
-		//return super.prepareRendering(area, image);
-	}
-	
-
 	private double p1=0,p2=0,p3=0;
 	
 	private int maxIters = 100;
@@ -129,27 +139,14 @@ public class UniversalJaninoGenerator extends Renderer {
 	public void setP3(double p3) {
 		this.p3 = p3;
 	}
-	public float renderPoint(double x, double y, RenderingContext context) {
-		JaninoContext ctx = (JaninoContext) context;
-		
-		if (evaluator == null)
-			return Renderer.BLACK_VALUE;
-		
-		try {
-			evaluator.evaluate(new Object[]{
-					x,y,ctx.resultContainer,new Integer(maxIters), new Double(p1), new Double(p2), new Double(p3)	
-			});
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-			return Renderer.BLACK_VALUE;
-		}
-		return ctx.resultContainer[0];
-	}
 	
-	@Override
-	protected void finishRendering(ObservationArea area, FloatMatrix image,
-			RenderingContext renderContext) {
-
+	public Function get() {
+		if (! scriptCompiled){
+			if (!compileScript()){
+				System.err.println("Script compilation failed.");
+			}
+		}
+		return new Func();
 	}
 
 }

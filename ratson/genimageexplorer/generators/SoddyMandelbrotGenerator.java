@@ -62,6 +62,7 @@ public class SoddyMandelbrotGenerator implements FunctionFactory{
 	class Func extends Function{
 
 		@Override
+		public
 		float evaluate(double X, double Y) {
 			int iters = 0;
 			double xx;

@@ -15,6 +15,7 @@ public class InterleavingMandelbrot implements FunctionFactory  {
 		public Complex c=new Complex();
 		public Complex zn=new Complex();
 		@Override
+		public
 		float evaluate(double cx, double cy) {
 			c.set(cx,cy);
 			z.set(c);

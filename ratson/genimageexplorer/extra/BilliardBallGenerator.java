@@ -2,13 +2,12 @@ package ratson.genimageexplorer.extra;
 
 import java.util.Random;
 
-import ratson.genimageexplorer.ObservationArea;
-import ratson.genimageexplorer.generators.Renderer;
-import ratson.genimageexplorer.generators.RenderingContext;
-import ratson.genimageexplorer.extra.bounce.*;
-import ratson.utils.FloatMatrix;
+import ratson.genimageexplorer.extra.bounce.BallSimulator;
+import ratson.genimageexplorer.extra.bounce.BilliardEvent;
+import ratson.genimageexplorer.generators.Function;
+import ratson.genimageexplorer.generators.FunctionFactory;
 
-public class BilliardBallGenerator extends Renderer {
+public class BilliardBallGenerator implements FunctionFactory {
 
 	
 	public BilliardBallGenerator(){
@@ -36,19 +35,36 @@ public class BilliardBallGenerator extends Renderer {
 	private BilliardEvent exitCondition; 
 	private double[] initialBalls=null;	
 
-	
-	public float renderPoint(double x, double y, RenderingContext renderContrxt) {
-		BilliardBallRenderingContext rc =(BilliardBallRenderingContext) renderContrxt; 
+	class Func extends Function{
+
+		private BallSimulator simulator;
+		Func(){
+			simulator = new BallSimulator(); 
+			simulator.setBallsNum(ballNum);
+			simulator.setWalls(-1.1, -1.1, 11.1, 11.1);
 		
-		rc.simulator.setBalls(initialBalls);
-		
-		rc.simulator.setBall(0, 5, 5, x, y);
-		return (float) rc.simulator.simulateUntil(exitCondition, maxIter);
+			initialBalls=new double [ballNum*4];
+			Random r=new Random(seed);
+			
+			for (int i=0;i<ballNum;++i){
+				int p=i*4;
+				initialBalls[p]=r.nextDouble()*10;
+				initialBalls[p+1]=r.nextDouble()*10;
+				initialBalls[p+2]=r.nextDouble()-0.5;
+				initialBalls[p+3]=r.nextDouble()-0.5;
+			}
+			
+			
+		}
+		@Override
+		public float evaluate(double x, double y) {
+			simulator.setBalls(initialBalls);
+			
+			simulator.setBall(0, 5, 5, x, y);
+			return (float) simulator.simulateUntil(exitCondition, maxIter);
+		}
 	}
-
-
-
-
+	
 
 
 	public int getBallNum() {
@@ -72,43 +88,10 @@ public class BilliardBallGenerator extends Renderer {
 	}
 	
 
-	protected void finishRendering(ObservationArea area, FloatMatrix image, RenderingContext renderContext) {
-	}
 
 
-
-	protected RenderingContext prepareRendering(ObservationArea area) {
-		BilliardBallRenderingContext rc = new BilliardBallRenderingContext();
-		
-		rc.simulator = new BallSimulator(); 
-		rc.simulator.setBallsNum(ballNum);
-		rc.simulator.setWalls(-1.1, -1.1, 11.1, 11.1);
-	
-		initialBalls=new double [ballNum*4];
-		Random r=new Random(seed);
-		
-		for (int i=0;i<ballNum;++i){
-			int p=i*4;
-			initialBalls[p]=r.nextDouble()*10;
-			initialBalls[p+1]=r.nextDouble()*10;
-			initialBalls[p+2]=r.nextDouble()-0.5;
-			initialBalls[p+3]=r.nextDouble()-0.5;
-		}
-		
-		return rc;
-	}
-
-
-
-
-
-
-	public Renderer cloneRenderer() {
-		BilliardBallGenerator bg=new BilliardBallGenerator();
-		bg.ballNum=ballNum;
-		bg.maxIter=maxIter;
-		bg.seed=seed;
-		return bg;
+	public Function get() {
+		return new Func();
 	}
 
 

@@ -7,6 +7,7 @@ public class MandelBarGenerator extends MandelbrotGenerator {
 	class Func extends Function{
 
 		@Override
+		public
 		float evaluate(double cx, double cy) {
 			double x=cx,y=cy,x2,y2,xx;
 			int iters=0;

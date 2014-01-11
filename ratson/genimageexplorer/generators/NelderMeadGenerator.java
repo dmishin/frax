@@ -66,6 +66,7 @@ public class NelderMeadGenerator implements FunctionFactory {
 			java.util.Arrays.sort(slots, slotComparator);
 		}
 		@Override
+		public
 		float evaluate(double x, double y) {
 			if (isMovingAllPoints){
 				slots[0].set(x,y);
