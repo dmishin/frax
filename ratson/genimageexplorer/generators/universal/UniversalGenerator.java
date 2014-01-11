@@ -1,25 +1,14 @@
 package ratson.genimageexplorer.generators.universal;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-
-import javax.swing.JOptionPane;
-
-import com.sun.org.apache.xpath.internal.operations.Plus;
-
-import ratson.genimageexplorer.ObservationArea;
-import ratson.genimageexplorer.generators.Renderer;
-import ratson.genimageexplorer.generators.RenderingContext;
+import ratson.genimageexplorer.generators.Function;
+import ratson.genimageexplorer.generators.FunctionFactory;
 import ratson.genimageexplorer.generators.janino.ScriptReference;
 import ratson.genimageexplorer.gui.dialogs.EditScriptDialog;
-import ratson.utils.FloatMatrix;
 
-public class UniversalGenerator extends Renderer {
+public class UniversalGenerator implements FunctionFactory {
 
 
-	private int maxIter;
+	int maxIter;
 
 
 	protected ScriptReference script;
@@ -37,38 +26,6 @@ public class UniversalGenerator extends Renderer {
 		
 
 	}
-
-	protected void finishRendering(ObservationArea area, FloatMatrix image, RenderingContext renderContext) {
-		//do nothing
-	}
-
-
-
-	public float renderPoint(double x, double y, RenderingContext renderContrxt) {
-		UniversalRendererContext rc =(UniversalRendererContext)renderContrxt;
-		
-		if (!rc.isParsedOK())
-			return -1;
-		
-		rc.varX.setValue(x);
-		rc.varY.setValue(y);
-		
-		
-		rc.init.eval();
-		int iter=0;
-		do {
-			rc.varIter.setValue(iter);
-			rc.repeat.eval();
-			iter++;
-		} while (rc.condition.eval()>0 && iter<maxIter);
-		
-		if (iter<maxIter)
-			return (float) rc.finish.eval();
-		else
-			return (float) rc.finishUnreached.eval();
-	}
-
-
 	public void setWholeFormula(String formula) {
 		script.script = formula;
 		script.changed = true;
@@ -101,14 +58,20 @@ public class UniversalGenerator extends Renderer {
 		maxIter=100;
 	}
 	
-
-	protected RenderingContext prepareRendering(ObservationArea area) {
-		UniversalRendererContext context = new UniversalRendererContext();
+	public Function get() {
 		try {
-			context.setFormula(script.getScript());
+			UniversalRendererContext func = new UniversalRendererContext(this);
+			func.setFormula(script.getScript());
+			return func;
 		} catch (ScriptSyntaxException e) {
 			System.err.println("Parsing failed");
+			System.err.println(e);
 		}
-		return context;
+		return new Function() {
+			@Override
+			public float evaluate(double x, double y) {
+				return 0;
+			}
+		}; 
 	}
 }

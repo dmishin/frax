@@ -7,12 +7,10 @@ import org.codehaus.janino.ScriptEvaluator;
 import org.codehaus.janino.Parser.ParseException;
 import org.codehaus.janino.Scanner.ScanException;
 
-import ratson.genimageexplorer.ObservationArea;
 import ratson.genimageexplorer.generators.Function;
 import ratson.genimageexplorer.generators.FunctionFactory;
 import ratson.genimageexplorer.generators.Renderer;
 import ratson.genimageexplorer.gui.dialogs.EditScriptDialog;
-import ratson.utils.FloatMatrix;
 
 public class UniversalJaninoGenerator implements FunctionFactory {
 
