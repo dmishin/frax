@@ -2,12 +2,13 @@ package ratson.genimageexplorer;
 
 import java.awt.image.BufferedImage;
 
-import ratson.genimageexplorer.generators.AbstractGenerator;
+import ratson.genimageexplorer.generators.FunctionFactory;
+import ratson.genimageexplorer.generators.Renderer;
 import ratson.genimageexplorer.generators.RendererException;
 import ratson.utils.FloatMatrix;
 
 public class RenderingChain {
-	private AbstractGenerator generator;
+	private Renderer renderer = new Renderer();
 	private FloatMatrix rawImage;
 	private ColorPattern colorizer;
 	private BufferedImage image;
@@ -18,8 +19,8 @@ public class RenderingChain {
 	/* (non-Javadoc)
 	 * @see ratson.genimageexplorer.AbstractRendererChain#setGenerator(ratson.genimageexplorer.generators.AbstractGenerator)
 	 */
-	public void setGenerator(AbstractGenerator generator) {
-		this.generator = generator;
+	public void setFunction(FunctionFactory f) {
+		renderer.setFunction(f);
 	}
 	/* (non-Javadoc)
 	 * @see ratson.genimageexplorer.AbstractRendererChain#getImage()
@@ -32,12 +33,12 @@ public class RenderingChain {
 	 * @see ratson.genimageexplorer.AbstractRendererChain#render(ratson.genimageexplorer.ObservationPoint, java.lang.Runnable, java.lang.Runnable)
 	 */
 	public void render(ObservationArea area, Runnable onFinish, Runnable onProgress) throws RendererException{
-		generator.render(area, rawImage, onFinish, onProgress);
+		renderer.render(area, rawImage, onFinish);
 	}
 
 	/**returns true, if chain is ready to render the data*/
 	private boolean checkChain() {
-		return generator != null && rawImage!= null &&
+		return renderer.getFunction() != null && rawImage!= null &&
 		colorizer != null && image != null;
 	}
 
@@ -102,8 +103,8 @@ public class RenderingChain {
 	/* (non-Javadoc)
 	 * @see ratson.genimageexplorer.AbstractRendererChain#getGenerator()
 	 */
-	public AbstractGenerator getGenerator() {
-		return generator;
+	public FunctionFactory getFunction() {
+		return renderer.getFunction();
 	}
 	/* (non-Javadoc)
 	 * @see ratson.genimageexplorer.AbstractRendererChain#setPattern(ratson.genimageexplorer.ColorPattern)
@@ -117,7 +118,7 @@ public class RenderingChain {
 	public boolean ensureConsistency() {
 		if (colorizer == null)
 			return false;
-		if (generator == null)
+		if (getFunction() == null)
 			return false;
 		if (image == null)
 			return false;
@@ -128,6 +129,9 @@ public class RenderingChain {
 		
 		rawImage.resize(w*scale, h*scale);
 		return true;
+	}
+	public Renderer getRenderer() {
+		return renderer;
 	}
 	
 	

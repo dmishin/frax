@@ -12,7 +12,7 @@ import java.util.LinkedList;
 
 import nanoxml.XMLElement;
 
-import ratson.genimageexplorer.generators.AbstractGenerator;
+import ratson.genimageexplorer.generators.Renderer;
 import ratson.genimageexplorer.gui.PatternEditorControl;
 import ratson.genimageexplorer.gui.dialogs.PatternEditor;
 import ratson.utils.FloatMatrix;
@@ -315,7 +315,7 @@ public class EditablePattern extends ColorPattern {
 	}
 	@Override
 	public int renderPoint(float v) {
-		if (v == AbstractGenerator.BLACK_VALUE)
+		if (v == Renderer.BLACK_VALUE)
 			return 0;
 		else{
 			int idx=(int) (Utils.mod(v*cycleSpeed+offset,0.999999)*(colorTable.length));

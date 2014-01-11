@@ -3,7 +3,7 @@ package ratson.genimageexplorer;
 import java.awt.Component.BaselineResizeBehavior;
 import java.awt.image.BufferedImage;
 
-import ratson.genimageexplorer.generators.AbstractGenerator;
+import ratson.genimageexplorer.generators.Renderer;
 import ratson.utils.FloatMatrix;
 import ratson.utils.Utils;
 
@@ -80,7 +80,7 @@ public class SmoothColorPattern extends ColorPattern {
 
 	@Override
 	public int renderPoint(float v) {
-		if (v == AbstractGenerator.BLACK_VALUE)
+		if (v == Renderer.BLACK_VALUE)
 			return 0;
 		else{
 			int idx=(int) (Utils.mod(v*k+b,0.999999)*(patternData.length));

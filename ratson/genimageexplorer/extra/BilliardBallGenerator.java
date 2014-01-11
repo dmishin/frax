@@ -3,12 +3,12 @@ package ratson.genimageexplorer.extra;
 import java.util.Random;
 
 import ratson.genimageexplorer.ObservationArea;
-import ratson.genimageexplorer.generators.AbstractGenerator;
+import ratson.genimageexplorer.generators.Renderer;
 import ratson.genimageexplorer.generators.RenderingContext;
 import ratson.genimageexplorer.extra.bounce.*;
 import ratson.utils.FloatMatrix;
 
-public class BilliardBallGenerator extends AbstractGenerator {
+public class BilliardBallGenerator extends Renderer {
 
 	
 	public BilliardBallGenerator(){
@@ -103,7 +103,7 @@ public class BilliardBallGenerator extends AbstractGenerator {
 
 
 
-	public AbstractGenerator cloneRenderer() {
+	public Renderer cloneRenderer() {
 		BilliardBallGenerator bg=new BilliardBallGenerator();
 		bg.ballNum=ballNum;
 		bg.maxIter=maxIter;

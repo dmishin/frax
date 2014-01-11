@@ -4,7 +4,7 @@ import ratson.genimageexplorer.ObservationArea;
 import ratson.utils.FloatMatrix;
 import ratson.utils.Utils;
 
-public class SoddyMandelbrotGenerator extends AbstractGenerator {
+public class SoddyMandelbrotGenerator implements FunctionFactory{
 
 
 	private int maxIter=200;
@@ -59,85 +59,87 @@ public class SoddyMandelbrotGenerator extends AbstractGenerator {
 		return true;
 	}
 	
-	
-	protected void finishRendering(ObservationArea area, FloatMatrix image,
-			RenderingContext renderContext) {
-	}
+	class Func extends Function{
 
-	public float renderPoint(double X, double Y, RenderingContext context) {
-		int iters = 0;
-		double xx;
-		
-		double x=x0;
-		double y=y0;
-		
-		double sn;
-		double cs;
-
-		while (iters<maxIter && 
-				(circleMode&&inCircle(x, y) || (!circleMode)&&inTriangle(x, y))){
-			//first, rotate
+		@Override
+		float evaluate(double X, double Y) {
+			int iters = 0;
+			double xx;
 			
-			if (x>=0 && SQ3*x>=Math.abs(y)){
-				//if in first triangle
-				//do nothing
-				sn=0;
-				cs=1;
-			}else{
-				if (y>0){
-					//rotate -2*pi/3
-					cs=-0.5;
-					sn=-SQ3*0.5;
+			double x=x0;
+			double y=y0;
+			
+			double sn;
+			double cs;
+
+			while (iters<maxIter && 
+					(circleMode&&inCircle(x, y) || (!circleMode)&&inTriangle(x, y))){
+				//first, rotate
+				
+				if (x>=0 && SQ3*x>=Math.abs(y)){
+					//if in first triangle
+					//do nothing
+					sn=0;
+					cs=1;
 				}else{
-					//rotate 2*pi/3
-					cs=-0.5;
-					sn=+SQ3*0.5;
-				}	
-			}
-			xx = x*cs-y*sn;
-			y  = y*cs+x*sn;
-			x = xx;
-			
-			
-			//rotation done.
-			//now shift
-			//z1 =  -2*sqrt(3)+1-12/(z-2*sqrt(3)-1)
-			x -= 1;
-			
-			//INVERT at 0
-			double d = x*x+y*y;
-			
-			x = x/d;
-			y=  y/d;
-			
-			//shift by 2/sqrt(3)
-			
-			x+=1/SQ3;
-			//invert again
-			d = x*x+y*y;
-			x = x/d;
-			y=  y/d;
-			
-			//shift back
-			x+=1;
-			
-			//rotate back
-			xx = x*cs+y*sn;
-			y  = y*cs-x*sn;
-			x = xx;
+					if (y>0){
+						//rotate -2*pi/3
+						cs=-0.5;
+						sn=-SQ3*0.5;
+					}else{
+						//rotate 2*pi/3
+						cs=-0.5;
+						sn=+SQ3*0.5;
+					}	
+				}
+				xx = x*cs-y*sn;
+				y  = y*cs+x*sn;
+				x = xx;
+				
+				
+				//rotation done.
+				//now shift
+				//z1 =  -2*sqrt(3)+1-12/(z-2*sqrt(3)-1)
+				x -= 1;
+				
+				//INVERT at 0
+				double d = x*x+y*y;
+				
+				x = x/d;
+				y=  y/d;
+				
+				//shift by 2/sqrt(3)
+				
+				x+=1/SQ3;
+				//invert again
+				d = x*x+y*y;
+				x = x/d;
+				y=  y/d;
+				
+				//shift back
+				x+=1;
+				
+				//rotate back
+				xx = x*cs+y*sn;
+				y  = y*cs-x*sn;
+				x = xx;
 
+				
+				//mandelbrot shift
+				
+				x+=X;
+				y+=Y;
+				
+				iters++;
+			}
+			if (iters>=maxIter)
+				return -1;
+			return iters;
 			
-			//mandelbrot shift
-			
-			x+=X;
-			y+=Y;
-			
-			iters++;
 		}
-		if (iters>=maxIter)
-			return -1;
-		return iters;
 		
 	}
-
+	public Function get() {
+		return new Func();
+	}
 }

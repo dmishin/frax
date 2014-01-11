@@ -8,8 +8,48 @@ import ratson.utils.CMath;
 import ratson.utils.Complex;
 import ratson.utils.FloatMatrix;
 
-public class InterleavingMandelbrot extends AbstractGenerator {
+public class InterleavingMandelbrot implements FunctionFactory  {
 
+	public class Func extends Function{
+		public Complex z=new Complex();
+		public Complex c=new Complex();
+		public Complex zn=new Complex();
+		@Override
+		float evaluate(double cx, double cy) {
+			c.set(cx,cy);
+			z.set(c);
+			int iters=0;
+			double r2=0;			
+			while (iters<maxIters && r2<r2Max){
+				int pow;
+				if (iters%2==1){
+					pow=power2;
+				}else{
+					pow=power1;
+				}
+				
+				zn.set(z);
+				for (int i=1;i<pow;++i){
+					CMath.mul(zn, z, zn);
+				}
+				CMath.add(zn, c, z);
+				r2=z.abs2();
+				iters++;
+			}
+			if (iters>=maxIters)
+				return -1.0f;
+
+			//smooth extrapolation
+			if (isSmooth){
+				double dx=(ln_ln_r2max-Math.log(Math.log(r2)))/lnNM2;
+				return (float)dx+(float)iters;
+			}else{
+				return iters;
+			}		
+
+		}
+		
+	}
 	private int maxIters=100;
 	private double r2Max;
 	private int power1=2, power2=3;
@@ -64,55 +104,7 @@ public class InterleavingMandelbrot extends AbstractGenerator {
 		setRMax(2.0);
 	}
 	
-	class RC extends RenderingContext{
-		public Complex z=new Complex();
-		public Complex c=new Complex();
-		public Complex zn=new Complex();
-	}
-	//private double lnpow;
-	public float renderPoint(double cx, double cy, RenderingContext ctx) {
-		RC context = (RC) ctx;
-		
-		context.c.set(cx,cy);
-		context.z.set(cx,cy);
-		int iters=0;
-		double r2=0;
-		
-		
-		while (iters<maxIters && r2<r2Max){
-			
-			int pow;
-			if (iters%2==1){
-				pow=power2;
-			}else{
-				pow=power1;
-			}
-			
-			context.zn.set(context.z);
-			for (int i=1;i<pow;++i){
-				CMath.mul(context.zn, context.z, context.zn);
-			}
-			CMath.add(context.zn, context.c, context.z);
-			r2=context.z.abs2();
-			iters++;
-		}
-		if (iters>=maxIters)
-			return -1.0f;
-
-		//smooth extrapolation
-		if (isSmooth){
-			double dx=(ln_ln_r2max-Math.log(Math.log(r2)))/lnNM2;
-			return (float)dx+(float)iters;
-		}else{
-			return iters;
-		}		
-
-	}
-	protected void finishRendering(ObservationArea area, FloatMatrix image, RenderingContext renderContext) {
-	}
-
-	protected RenderingContext prepareRendering(ObservationArea area) {
-		RC newCtx = new RC();
-		return newCtx;
+	public Function get() {
+		return new Func();
 	}
 }

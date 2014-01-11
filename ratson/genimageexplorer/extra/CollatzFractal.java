@@ -1,7 +1,7 @@
 package ratson.genimageexplorer.extra;
 
 import ratson.genimageexplorer.ObservationArea;
-import ratson.genimageexplorer.generators.AbstractGenerator;
+import ratson.genimageexplorer.generators.Renderer;
 import ratson.genimageexplorer.generators.MandelbrotGenerator;
 import ratson.genimageexplorer.generators.RenderingContext;
 import ratson.utils.CMath;

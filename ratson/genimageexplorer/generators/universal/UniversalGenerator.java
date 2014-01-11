@@ -10,13 +10,13 @@ import javax.swing.JOptionPane;
 import com.sun.org.apache.xpath.internal.operations.Plus;
 
 import ratson.genimageexplorer.ObservationArea;
-import ratson.genimageexplorer.generators.AbstractGenerator;
+import ratson.genimageexplorer.generators.Renderer;
 import ratson.genimageexplorer.generators.RenderingContext;
 import ratson.genimageexplorer.generators.janino.ScriptReference;
 import ratson.genimageexplorer.gui.dialogs.EditScriptDialog;
 import ratson.utils.FloatMatrix;
 
-public class UniversalGenerator extends AbstractGenerator {
+public class UniversalGenerator extends Renderer {
 
 
 	private int maxIter;

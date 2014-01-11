@@ -1,12 +1,14 @@
 package ratson.genimageexplorer.generators;
 
+import java.util.Comparator;
+
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 
 import ratson.genimageexplorer.ObservationArea;
 import ratson.utils.FloatMatrix;
 import ratson.utils.Utils;
 
-public class NelderMeadGenerator extends AbstractGenerator {
+public class NelderMeadGenerator implements FunctionFactory {
 	double x0=0.0, y0=-1, x1=0.0, y1=1; //initial two points
 	double eps=0.0001;
 	private int maxIter=1000;
@@ -17,6 +19,145 @@ public class NelderMeadGenerator extends AbstractGenerator {
 	private boolean isMovingAllPoints = false; //if true,all initial points are moved
 	private boolean isReturningSteps=true;//If true - return number of steps, else return final value
 	private int targetFunctionIndex = 0;
+	class NelderMeadFunction extends Function{
+		
+		public class Slot{
+			public double[] x=new double[2];
+			public double f;
+			void set( double x1, double y1){
+				x[0]=x1;
+				x[1]=y1;
+			}
+
+			void set( double[] x1 ){
+				for (int i = 0; i < x1.length; i++) {
+					x[i]=x1[i];
+				}		
+			}
+			void set( double[] x1, double f1){
+				f=f1;
+				set( x1 );
+			}
+			@Override
+			public String toString() {
+				return String.format("[%f; %g](%g)", x[0],x[1],f);
+			}
+		}
+		public Slot[] slots;
+		public NelderMeadFunction() {
+			slots = new Slot[3];
+			for (int i =0; i<3; ++i){
+				slots[i] = new Slot();
+			}
+		}
+		private Comparator<Slot> slotComparator = new Comparator<Slot>() {
+			public int compare(Slot o1, Slot o2) {
+				if (o1.f<o2.f)
+					return -1;
+				else
+					return 1;
+			}
+		};
+		public double[] xc=new double[2];
+		public double[] xr=new double[2];
+		public double[] xe=new double[2];
+		public double[] xs=new double[2];
+		public void sortSlots(){
+			java.util.Arrays.sort(slots, slotComparator);
+		}
+		@Override
+		float evaluate(double x, double y) {
+			if (isMovingAllPoints){
+				slots[0].set(x,y);
+				slots[0].f = func(slots[0].x);
+		
+				slots[1].set(x0+x,y0+y);
+				slots[1].f = func(slots[1].x);
+		
+				slots[2].set(x1+x,y1+y);
+				slots[2].f = func(slots[2].x);
+			}else{
+				slots[0].set(x,y);
+				slots[0].f = func(slots[0].x);
+		
+				slots[1].set(x0,y0);
+				slots[1].f = func(slots[1].x);
+		
+				slots[2].set(x1,y1);
+				slots[2].f = func(slots[2].x);
+			}
+			int iter = 0;
+			while (iter < maxIter){
+				iter ++;
+				sortSlots();
+				NelderMeadFunction.Slot sh,sg,sl;
+				sh = slots[2];
+				sg = slots[1];
+				sl = slots[0];
+				if ( exitCondition( sl.x))
+					break;
+				
+				//calculate center
+				lincomb(slots[0].x, 0.5, slots[1].x, 0.5, xc);
+				
+				//calculate reflect
+				lincomb(xc, 1+alpha, sh.x, -alpha, xr );
+				double fr = func( xr); 
+				if (fr<sl.f){
+//		            #expand
+					lincomb(xr, beta, xc, 1-beta, xe);
+					double fe = func( xe);
+					if (fe < fr){
+//		                #expand success
+						slots[2].set(xe, fe);
+					}else{
+//		                show("expand fail, use flip")
+						slots[2].set(xr, fr);
+					}
+				}else if( fr < sg.f){
+					// 	#not so good, but at least better than.
+					slots[2].set( xr, fr);
+				}else{
+//		        else: #too bad (worse that fg )
+					if ( fr< sh.f){//at least, not worse than xh?
+						//swap xh and xr
+						double[] xx = sh.x;
+						double ff = sh.f;
+						
+						sh.x = xr;
+						sh.f = fr;
+						
+						xr = xx;
+						fr = ff;
+					}
+//		            #now xr is worse than xh in any case
+//		            #try contract
+					lincomb(sh.x, gamma, xc, 1-gamma, xs);
+					double fs = func( xs );
+					if (fs < sh.f){
+//		                #contract success, use it
+						slots[2].set(xs, fs);
+					}else{
+//		                #contract fail.
+//		                #last resort: global shrink
+						for (int i=1; i<3;++i){
+							lincomb( slots[i].x, delta, sl.x, 1-delta, slots[i].x);
+							slots[i].f = func( slots[i].x);
+						}
+					}
+				}
+			}
+			if (iter >= maxIter){
+				return -1;
+			}else{
+				if (isReturningSteps){
+					return iter;
+				}else{
+					return (float) (slots[0].x[0]);
+				}
+			}
+		}
+	}
 	
 	public boolean getReturningSteps(){
 		return isReturningSteps;
@@ -109,117 +250,8 @@ public class NelderMeadGenerator extends AbstractGenerator {
 	
 	
 	public NelderMeadGenerator() {
-		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	protected void finishRendering(ObservationArea area, FloatMatrix image,
-			RenderingContext renderContext) {
-		
-		
-
-	}
-	@Override
-	protected RenderingContext prepareRendering(ObservationArea area) {
-		return new NelderMeadContext();
-	}
-
-	@Override
-	public float renderPoint(double x, double y, RenderingContext context) {
-		// TODO Auto-generated method stub
-		NelderMeadContext ctx = (NelderMeadContext) context;
-		if (isMovingAllPoints){
-			ctx.slots[0].set(x,y);
-			ctx.slots[0].f = func(ctx.slots[0].x);
-	
-			ctx.slots[1].set(x0+x,y0+y);
-			ctx.slots[1].f = func(ctx.slots[1].x);
-	
-			ctx.slots[2].set(x1+x,y1+y);
-			ctx.slots[2].f = func(ctx.slots[2].x);
-		}else{
-			ctx.slots[0].set(x,y);
-			ctx.slots[0].f = func(ctx.slots[0].x);
-	
-			ctx.slots[1].set(x0,y0);
-			ctx.slots[1].f = func(ctx.slots[1].x);
-	
-			ctx.slots[2].set(x1,y1);
-			ctx.slots[2].f = func(ctx.slots[2].x);
-		}
-		int iter = 0;
-		while (iter < maxIter){
-			iter ++;
-			ctx.sortSlots();
-			NelderMeadContext.Slot sh,sg,sl;
-			sh = ctx.slots[2];
-			sg = ctx.slots[1];
-			sl = ctx.slots[0];
-			if ( exitCondition( sl.x))
-				break;
-			
-			//calculate center
-			lincomb(ctx.slots[0].x, 0.5, ctx.slots[1].x, 0.5, ctx.xc);
-			
-			//calculate reflect
-			lincomb(ctx.xc, 1+alpha, sh.x, -alpha, ctx.xr );
-			double fr = func( ctx.xr); 
-			if (fr<sl.f){
-//	            #expand
-				lincomb(ctx.xr, beta, ctx.xc, 1-beta, ctx.xe);
-				double fe = func( ctx.xe);
-				if (fe < fr){
-//	                #expand success
-					ctx.slots[2].set(ctx.xe, fe);
-				}else{
-//	                show("expand fail, use flip")
-					ctx.slots[2].set(ctx.xr, fr);
-				}
-			}else if( fr < sg.f){
-				// 	#not so good, but at least better than.
-				ctx.slots[2].set( ctx.xr, fr);
-			}else{
-//	        else: #too bad (worse that fg )
-				if ( fr< sh.f){//at least, not worse than xh?
-					//swap xh and xr
-					double[] xx = sh.x;
-					double ff = sh.f;
-					
-					sh.x = ctx.xr;
-					sh.f = fr;
-					
-					ctx.xr = xx;
-					fr = ff;
-				}
-//	            #now xr is worse than xh in any case
-//	            #try contract
-				lincomb(sh.x, gamma, ctx.xc, 1-gamma, ctx.xs);
-				double fs = func( ctx.xs );
-				if (fs < sh.f){
-//	                #contract success, use it
-					ctx.slots[2].set(ctx.xs, fs);
-				}else{
-//	                #contract fail.
-//	                #last resort: global shrink
-					for (int i=1; i<3;++i){
-						lincomb( ctx.slots[i].x, delta, sl.x, 1-delta, ctx.slots[i].x);
-						ctx.slots[i].f = func( ctx.slots[i].x);
-					}
-				}
-			}
-		}
-		if (iter >= maxIter){
-			return -1;
-		}else{
-			if (isReturningSteps){
-				return iter;
-			}else{
-				return (float) (ctx.slots[0].x[0]);
-			}
-		}
-	}
-	
-	
 	private boolean exitCondition(double[] x){
 		switch( targetFunctionIndex ){
 		case 0:
@@ -257,9 +289,7 @@ public class NelderMeadGenerator extends AbstractGenerator {
 		throw new RuntimeException( "Incorrect target fucntion index");
 	}
 
-	public static void main(String[] args) {
-		NelderMeadContext ctx = new NelderMeadContext();
-		NelderMeadGenerator gen = new NelderMeadGenerator();
-		gen.renderPoint(0.1, 0.3, ctx);
+	public Function get() {
+		return new NelderMeadFunction();
 	}
 }

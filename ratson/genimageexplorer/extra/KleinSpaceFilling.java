@@ -1,12 +1,12 @@
 package ratson.genimageexplorer.extra;
 
 import ratson.genimageexplorer.ObservationArea;
-import ratson.genimageexplorer.generators.AbstractGenerator;
+import ratson.genimageexplorer.generators.Renderer;
 import ratson.genimageexplorer.generators.RenderingContext;
 import ratson.utils.FloatMatrix;
 import ratson.utils.Utils;
 
-public class KleinSpaceFilling extends AbstractGenerator {
+public class KleinSpaceFilling extends Renderer {
 
 	private static final double sin2pi5 = Math.sin(2*Math.PI/5);
 	private static final double cos2pi5 = Math.cos(2*Math.PI/5);

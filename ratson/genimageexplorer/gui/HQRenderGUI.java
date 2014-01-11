@@ -26,14 +26,14 @@ import javax.swing.JTextField;
 import ratson.genimageexplorer.ColorPattern;
 import ratson.genimageexplorer.ObservationArea;
 import ratson.genimageexplorer.SmoothColorPattern;
-import ratson.genimageexplorer.generators.AbstractGenerator;
+import ratson.genimageexplorer.generators.Renderer;
 import ratson.genimageexplorer.generators.MandelBarGenerator;
 import ratson.genimageexplorer.generators.RendererException;
 
 public class HQRenderGUI extends JFrame {
 
 	
-	AbstractGenerator generator;
+	Renderer generator;
 	ColorPattern pattern;
 	
 	ImagePane rendered;
@@ -51,7 +51,7 @@ public class HQRenderGUI extends JFrame {
 	private JButton btnClose;
 	private JButton btnStop;
 	private Box box_progress;
-	public HQRenderGUI( AbstractGenerator generator, ColorPattern pattern, ObservationArea area){
+	public HQRenderGUI( Renderer generator, ColorPattern pattern, ObservationArea area){
 		super("HQ render");
 		this.generator = generator;
 		this.pattern = pattern;
@@ -266,7 +266,7 @@ public class HQRenderGUI extends JFrame {
 		new AAOption(8,null),
 	};
 	public static void main(String[] args) {
-		AbstractGenerator generator = new MandelBarGenerator();
+		Renderer generator = new Renderer(new MandelBarGenerator());
 		ColorPattern pattern = new SmoothColorPattern();
 		ObservationArea area = new ObservationArea(-1,-1,1,1);
 		

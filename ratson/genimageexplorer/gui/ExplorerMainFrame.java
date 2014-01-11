@@ -46,7 +46,8 @@ import ratson.genimageexplorer.ColorPattern;
 import ratson.genimageexplorer.ObservationArea;
 import ratson.genimageexplorer.RenderingChain;
 import ratson.genimageexplorer.XMLFormatException;
-import ratson.genimageexplorer.generators.AbstractGenerator;
+import ratson.genimageexplorer.generators.FunctionFactory;
+import ratson.genimageexplorer.generators.Renderer;
 import ratson.genimageexplorer.generators.RendererException;
 import ratson.genimageexplorer.gui.dialogs.ResolutionSetterDlg;
 import ratson.genimageexplorer.gui.mousetools.AbstractMouseTool;
@@ -499,16 +500,16 @@ public class ExplorerMainFrame extends JFrame {
 		System.out.println(rendererRcd.name);
 		Constructor c;
 		try {
-			Class generatorClass = Class.forName(rendererRcd.className);
-			c = generatorClass.getConstructor(null);
-			AbstractGenerator gener = (AbstractGenerator )c.newInstance(null);
+			Class functionClass = Class.forName(rendererRcd.className);
+			c = functionClass.getConstructor(null);
+			FunctionFactory func = (FunctionFactory)c.newInstance(null);
 			//generator is created, setting it
 			
-			renderer.setGenerator(gener);
+			renderer.setFunction(func);
 			
 			int numThreads = Runtime.getRuntime().availableProcessors();
 			System.out.println("Setting number of threads to the system default: "+numThreads);
-			gener.setNumThreads( numThreads);//setting number of threads, equal to number of processors
+			renderer.getRenderer().setNumThreads( numThreads);//setting number of threads, equal to number of processors
 
 			location.set(-2, -2, 2, 2);
 			//detaching old controls
@@ -519,7 +520,7 @@ public class ExplorerMainFrame extends JFrame {
 			Box b=Box.createVerticalBox();
 			b.setBorder(new TitledBorder(rendererRcd.name));
 			rendererSettingsPanel.add(b);
-			guiBuilder.build(gener, b, rendererRcd.params, null);
+			guiBuilder.build(func, b, rendererRcd.params, null);
 			
 			rendererSettingsPanel.setVisible(true);
 
@@ -611,7 +612,7 @@ public class ExplorerMainFrame extends JFrame {
 			this.numThreads = numThreads;
 		}
 		public void actionPerformed(ActionEvent e) {
-			renderer.getGenerator().setNumThreads(numThreads);
+			renderer.getRenderer().setNumThreads(numThreads);
 			System.out.println("Setted number of threads to "+numThreads);
 		}
 	}
@@ -651,8 +652,8 @@ public class ExplorerMainFrame extends JFrame {
 		};
 		actnStop=new AbstractAction("Stop", icons.getIcon("stop-32.png")){
 			public void actionPerformed(ActionEvent e) {
-				if (renderer.getGenerator() != null){
-					renderer.getGenerator().stopRendering();
+				if (renderer.getFunction() != null){
+					renderer.getRenderer().stopRendering();
 					
 					System.out.println("Stopping rendering process");
 				}
@@ -670,7 +671,7 @@ public class ExplorerMainFrame extends JFrame {
 		};
 		actnRenderHQ =new AbstractAction("High quality render"){
 			public void actionPerformed(ActionEvent e) {
-				HQRenderGUI hqGui = new HQRenderGUI(renderer.getGenerator(),renderer.getColorizer(), location);
+				HQRenderGUI hqGui = new HQRenderGUI(renderer.getRenderer(),renderer.getColorizer(), location);
 				hqGui.setLocationRelativeTo(ExplorerMainFrame.this);
 				hqGui.setVisible(true);
 			}
@@ -821,14 +822,14 @@ public class ExplorerMainFrame extends JFrame {
 				enableUI(true);
 				progressBox.setVisible(false);
 				wakePatternRenderer();
-				System.out.println(String.format("Finished rendering in %dms.", renderer.getGenerator().getTimeElapsed() ));
+				System.out.println(String.format("Finished rendering in %dms.", renderer.getRenderer().getTimeElapsed() ));
 			}
 		});
 		//		wrap these handlers to make them run in a Swing main thread
 		final Runnable onProgress=new SwingInwoker(new Runnable(){
 			public void run() {
 				//called in this thread when rendering status bar needs to be updated
-				progressIndicator.setValue(renderer.getGenerator().getProgress());
+				progressIndicator.setValue(renderer.getRenderer().getProgress());
 			}
 		});
 

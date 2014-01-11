@@ -8,12 +8,12 @@ import org.codehaus.janino.Parser.ParseException;
 import org.codehaus.janino.Scanner.ScanException;
 
 import ratson.genimageexplorer.ObservationArea;
-import ratson.genimageexplorer.generators.AbstractGenerator;
+import ratson.genimageexplorer.generators.Renderer;
 import ratson.genimageexplorer.generators.RenderingContext;
 import ratson.genimageexplorer.gui.dialogs.EditScriptDialog;
 import ratson.utils.FloatMatrix;
 
-public class UniversalJaninoGenerator extends AbstractGenerator {
+public class UniversalJaninoGenerator extends Renderer {
 
 	private ScriptReference script = new ScriptReference();
 	
@@ -133,7 +133,7 @@ public class UniversalJaninoGenerator extends AbstractGenerator {
 		JaninoContext ctx = (JaninoContext) context;
 		
 		if (evaluator == null)
-			return AbstractGenerator.BLACK_VALUE;
+			return Renderer.BLACK_VALUE;
 		
 		try {
 			evaluator.evaluate(new Object[]{
@@ -141,7 +141,7 @@ public class UniversalJaninoGenerator extends AbstractGenerator {
 			});
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
-			return AbstractGenerator.BLACK_VALUE;
+			return Renderer.BLACK_VALUE;
 		}
 		return ctx.resultContainer[0];
 	}

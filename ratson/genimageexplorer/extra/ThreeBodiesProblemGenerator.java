@@ -1,12 +1,12 @@
 package ratson.genimageexplorer.extra;
 
 import ratson.genimageexplorer.ObservationArea;
-import ratson.genimageexplorer.generators.AbstractGenerator;
+import ratson.genimageexplorer.generators.Renderer;
 import ratson.genimageexplorer.generators.RenderingContext;
 import ratson.utils.FloatMatrix;
 import ratson.utils.Utils;
 
-public class ThreeBodiesProblemGenerator extends AbstractGenerator {
+public class ThreeBodiesProblemGenerator extends Renderer {
 
 	protected void finishRendering(ObservationArea area, FloatMatrix image,
 			RenderingContext renderContext) {

@@ -3,12 +3,12 @@ package ratson.genimageexplorer.extra;
 import java.awt.image.renderable.RenderContext;
 
 import ratson.genimageexplorer.ObservationArea;
-import ratson.genimageexplorer.generators.AbstractGenerator;
+import ratson.genimageexplorer.generators.Renderer;
 import ratson.genimageexplorer.generators.RenderingContext;
 import ratson.utils.FloatMatrix;
 import ratson.utils.Utils;
 
-public class HilbertUnwrap extends AbstractGenerator {
+public class HilbertUnwrap extends Renderer {
 
 	private double x0, y0, z0, r02;
 	
