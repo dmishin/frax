@@ -126,8 +126,7 @@ public class HilbertUnwrap implements FunctionFactory{
 
 
 	public Function get() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Func();
 	}
 	
 
