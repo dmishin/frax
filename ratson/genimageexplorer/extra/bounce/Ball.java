@@ -48,8 +48,6 @@ public class Ball {
 		double vz=dx*dvx+dy*dvy;
 		double v_z=-dx*dvy+dy*dvx;
 		
-		double l2=dx*dx+dy*dy;
-		
 		double D=v2*4 - v_z*v_z;
 		
 		if (D<=0) return Double.NaN;//no collision at all

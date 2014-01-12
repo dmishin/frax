@@ -1,7 +1,5 @@
 package ratson.genimageexplorer.generators;
 
-import ratson.genimageexplorer.ObservationArea;
-import ratson.utils.FloatMatrix;
 import ratson.utils.Utils;
 
 public class SoddyCirclesGenerator implements FunctionFactory {

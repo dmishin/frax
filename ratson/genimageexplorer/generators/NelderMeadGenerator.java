@@ -2,10 +2,6 @@ package ratson.genimageexplorer.generators;
 
 import java.util.Comparator;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
-
-import ratson.genimageexplorer.ObservationArea;
-import ratson.utils.FloatMatrix;
 import ratson.utils.Utils;
 
 public class NelderMeadGenerator implements FunctionFactory {

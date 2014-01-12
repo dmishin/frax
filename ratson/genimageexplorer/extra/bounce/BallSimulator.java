@@ -1,8 +1,6 @@
 package ratson.genimageexplorer.extra.bounce;
 
-import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 public class BallSimulator {
 	int numBalls;
@@ -43,17 +41,6 @@ public class BallSimulator {
 		walls[2]=new Wall(0,f,-1,0);
 		walls[3]=new Wall(g,0,0,-1);
 		//walls[4]=new Wall(20,-2,-1,1);
-	}
-	
-	private static double min(double a,double b){
-		if (Double.isNaN(a))
-			return b;
-		if (Double.isNaN(b))
-			return a;
-		if (a>b) 
-			return b;
-		else
-			return a;
 	}
 	
 	public void recalcCollisions(){

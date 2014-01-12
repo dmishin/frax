@@ -8,14 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,24 +21,20 @@ import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 
 import javax.swing.Box;
-import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ListDataListener;
 
 import nanoxml.XMLElement;
 import nanoxml.XMLParseException;
-
 import ratson.genimageexplorer.EditablePattern;
 import ratson.genimageexplorer.PatternFormatException;
 import ratson.genimageexplorer.gui.PatternEditorControl;
 
+@SuppressWarnings("serial")
 public class PatternEditor extends JDialog{
 	
 	PatternEditorControl editor;
@@ -50,16 +42,13 @@ public class PatternEditor extends JDialog{
 	XMLElement systemPatterns;
 	XMLElement userPatterns;
 	XMLElement currentPattern;
-	private JComboBox patternList;
+	private JComboBox<ListItem> patternList;
 	private JButton btnSave;
 	private JButton btnCancel;
 	private JButton btnOK;
 	private JButton btnDel;
 	private JButton btnEqual;
 	private JButton btnRandom;
-	
-	private boolean patternUpdated = false;
-	
 	
 	public PatternEditor(Frame owner, EditablePattern ptrn){
 		super(owner,"Pattern editor",true);
@@ -133,7 +122,6 @@ public class PatternEditor extends JDialog{
 		btnOK.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				editor.getPattern(pattern);
-				patternUpdated = true;
 				setVisible(false);
 				saveUserPatterns();
 
@@ -230,7 +218,7 @@ public class PatternEditor extends JDialog{
 		Container c = getContentPane();
 		////////////create controls
 		editor =new PatternEditorControl();
-		patternList = new JComboBox();
+		patternList = new JComboBox<ListItem>();
 		btnSave = new JButton("Save");
 		btnOK = new JButton("OK");
 		btnCancel = new JButton("Cancel");

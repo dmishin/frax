@@ -1,11 +1,7 @@
 package ratson.genimageexplorer.extra;
 
-import ratson.genimageexplorer.ObservationArea;
-import ratson.genimageexplorer.extra.BilliardBallGenerator.Func;
 import ratson.genimageexplorer.generators.Function;
 import ratson.genimageexplorer.generators.FunctionFactory;
-import ratson.genimageexplorer.generators.Renderer;
-import ratson.utils.FloatMatrix;
 import ratson.utils.Utils;
 
 public class ThreeBodiesProblemGenerator implements FunctionFactory {
