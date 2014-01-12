@@ -3,9 +3,7 @@ package ratson.genimageexplorer.gui.utils;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
@@ -16,9 +14,9 @@ public class FilesTreeModel implements TreeModel {
 	private ArrayList<TreeModelListener> listeners = new ArrayList<TreeModelListener>();
 
 	public void fireTreeChanged(){
-		for (TreeModelListener lst : listeners) {
+		//for (TreeModelListener lst : listeners) {
 			//lst.treeStructureChanged(new TreeModelEvent());
-		}
+		//}
 		rootNode.reset();
 	}
 	
@@ -56,7 +54,6 @@ public class FilesTreeModel implements TreeModel {
 		
 		public TreeNode(File f, TreeNode parent){
 			file = f;
-			this.parent = parent;
 			isUpdated = false;
 		}
 		public void reset(){
@@ -66,8 +63,6 @@ public class FilesTreeModel implements TreeModel {
 		private boolean isUpdated;
 		
 		private File file;
-		private TreeNode parent;
-		
 		private ArrayList<TreeNode> children=null;
 		public boolean isLeaf(){
 			updateChildren();

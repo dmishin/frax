@@ -17,7 +17,6 @@ import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
@@ -109,8 +108,8 @@ public class ExplorerMainFrame extends JFrame {
 	private Thread renderThread;
 	SwingXMLGuiBuilder guiBuilder=new SwingXMLGuiBuilder();
 
-	private LinkedList registeredRenderers = new LinkedList();
-	private LinkedList registeredPatterns = new LinkedList();
+	private LinkedList<RendererRecord> registeredRenderers = new LinkedList<RendererRecord>();
+	private LinkedList<PatternRecord> registeredPatterns = new LinkedList<PatternRecord>();
 
 	private AbstractAction actnStop;
 
@@ -196,8 +195,7 @@ public class ExplorerMainFrame extends JFrame {
 
 	/**Load renderer by name*/
 	private void loadRenderer(String rendererName) {
-		for (Iterator iRen = registeredRenderers.iterator(); iRen.hasNext();) {
-			RendererRecord rcd = (RendererRecord) iRen.next();
+		for (RendererRecord rcd: registeredRenderers) {
 			if (rcd.name.equals(rendererName)){
 				loadRenderer(rcd);
 				return;
@@ -206,8 +204,7 @@ public class ExplorerMainFrame extends JFrame {
 		System.err.println("No such renderer:"+rendererName);
 	}
 	private void loadPattern(String patternName) {
-		for (Iterator iRen = registeredPatterns.iterator(); iRen.hasNext();) {
-			PatternRecord rcd = (PatternRecord ) iRen.next();
+		for (PatternRecord rcd: registeredPatterns) {
 			if (rcd.name.equals(patternName)){
 				loadPattern(rcd);
 				return ;
@@ -369,6 +366,7 @@ public class ExplorerMainFrame extends JFrame {
 	}
 
 
+	@SuppressWarnings("serial")
 	class SetMouseToolAction extends AbstractAction{
 		AbstractMouseTool tool;
 		public SetMouseToolAction(String name, AbstractMouseTool tool){
@@ -384,6 +382,7 @@ public class ExplorerMainFrame extends JFrame {
 		
 	}
 	class LoadRendererAction extends AbstractAction{
+		private static final long serialVersionUID = 1L;
 		private RendererRecord rendererRcd;
 
 		public LoadRendererAction(RendererRecord ren){
@@ -466,19 +465,17 @@ public class ExplorerMainFrame extends JFrame {
 		
 		JMenu renderersMenu=new JMenu("Renderers");
 		{
-			for (Iterator iRen = registeredRenderers.iterator(); iRen.hasNext();) {
-				RendererRecord rrec = (RendererRecord) iRen.next();
+			for (RendererRecord rrec: registeredRenderers) {
 				renderersMenu.add(new LoadRendererAction(rrec));
 			}
-		
+
 		}
 		mnu.add(renderersMenu);
 
 		JMenu patternsMenu = new JMenu("Patterns");
 		patternsMenu.setMnemonic(java.awt.event.KeyEvent.VK_P);
 		{
-			for (Iterator iPtrn = registeredPatterns.iterator(); iPtrn.hasNext();) {
-				PatternRecord rcd = (PatternRecord) iPtrn.next();
+			for (PatternRecord rcd : registeredPatterns) {
 				patternsMenu.add(new LoadPatternAction(rcd));
 			}
 		}
@@ -554,10 +551,9 @@ public class ExplorerMainFrame extends JFrame {
 	public void loadPattern(PatternRecord patternRcd) {
 		System.out.println("Loading pattern");
 		System.out.println(patternRcd.name);
-		Constructor c;
 		try {
-			Class patternClass = Class.forName(patternRcd.className);
-			c = patternClass.getConstructor(null);
+			Class<ColorPattern> patternClass = (Class<ColorPattern>) Class.forName(patternRcd.className);
+			Constructor<ColorPattern> c = patternClass.getConstructor(null);
 			ColorPattern pattern = (ColorPattern )c.newInstance(null);
 			//pattern is created, setting it
 			
@@ -604,6 +600,7 @@ public class ExplorerMainFrame extends JFrame {
 	}
 
 	/** action for setting different number of rendering threads*/
+	@SuppressWarnings("serial")
 	private class SetThreadsAction extends AbstractAction{
 		private int numThreads;
 

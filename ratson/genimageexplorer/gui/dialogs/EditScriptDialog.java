@@ -1,7 +1,6 @@
 package ratson.genimageexplorer.gui.dialogs;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -31,6 +30,7 @@ import ratson.genimageexplorer.gui.utils.FilesTreeModel;
  *
  * @author  dim
  */
+@SuppressWarnings("serial")
 public class EditScriptDialog extends javax.swing.JDialog {
 
 	/** Creates new form EditScriptDialog */
@@ -57,7 +57,7 @@ public class EditScriptDialog extends javax.swing.JDialog {
 				setVisible(false);
 			}
 		};
-		actnCancel=new AbstractAction("Cancel"){
+		new AbstractAction("Cancel"){
 			public void actionPerformed(ActionEvent e) {
 //				modalResult=false;
 				setVisible(false);
@@ -88,7 +88,7 @@ public class EditScriptDialog extends javax.swing.JDialog {
 			setTitle(script.getName()+" *");
 	}
 	
-	private Action actnOK, actnCancel, actnCompile, actnAdd, actnSaveAs;
+	private Action actnOK, actnCompile, actnSaveAs;
 
 	private JButton btnSave;
 
@@ -102,13 +102,10 @@ public class EditScriptDialog extends javax.swing.JDialog {
 	// <editor-fold defaultstate="collapsed" desc="Generated Code">
 	private void initComponents() {
 
-		Dimension maxBtnSize = new Dimension(Integer.MAX_VALUE, 30);
-		
-		
 		treeScripts = new JTree (new FilesTreeModel(scriptsDir,"script"));
 		
 		btnAdd = new javax.swing.JButton();
-		btnCompile = new javax.swing.JButton(actnCompile);
+		new javax.swing.JButton(actnCompile);
 		//btnCancel = new javax.swing.JButton(actnCancel);
 		btnOK = new javax.swing.JButton(actnOK);
 		txtScript = new javax.swing.JTextArea();
@@ -298,8 +295,6 @@ public class EditScriptDialog extends javax.swing.JDialog {
 	}
 	// Variables declaration - do not modify
 	private javax.swing.JButton btnAdd;
-	private javax.swing.JButton btnCompile;
-	private javax.swing.JButton btnCancel;
 	private javax.swing.JButton btnSaveAs;
 	private javax.swing.JButton btnOK;
 	private javax.swing.JTextArea txtScript;
