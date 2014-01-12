@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.event.MouseEvent;
 
 public abstract class ZoomMouseTool extends AbstractMouseTool {
 

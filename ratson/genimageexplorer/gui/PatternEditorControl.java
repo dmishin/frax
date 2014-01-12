@@ -11,23 +11,20 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
 
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import nanoxml.XMLElement;
-
 import ratson.genimageexplorer.ColorPicker;
 import ratson.genimageexplorer.EditablePattern;
 import ratson.genimageexplorer.PatternFormatException;
 import ratson.utils.Utils;
 
 public class PatternEditorControl extends JPanel {
+	
+	private static final long serialVersionUID = 1L;
 	
 	public static final int MAX_K = 65536;
 	private static final int PICKER_WIDTH = 6;

@@ -2,10 +2,8 @@ package ratson.genimageexplorer.gui.mousetools;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
-import java.awt.geom.AffineTransform;
 
 public abstract class RotateMouseTool extends AbstractMouseTool {
 

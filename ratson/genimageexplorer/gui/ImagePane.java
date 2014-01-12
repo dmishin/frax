@@ -1,25 +1,21 @@
 package ratson.genimageexplorer.gui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 
 import javax.swing.JPanel;
 
 import ratson.genimageexplorer.gui.mousetools.AbstractMouseTool;
 
+@SuppressWarnings("serial")
 public class ImagePane extends JPanel {
 	private Image img=null;
 	private int imgH=-1;

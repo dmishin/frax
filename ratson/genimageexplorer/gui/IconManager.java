@@ -10,12 +10,12 @@ public class IconManager {
 	public IconManager(String baseDir){
 		this.baseDir = baseDir;
 	}
-	private HashMap icons = new HashMap();
+	private HashMap<String, ImageIcon> icons = new HashMap<String, ImageIcon>();
 	
 	public ImageIcon getIcon(String name){
 		if (name == null)
 			return null;
-		ImageIcon icn = (ImageIcon) icons.get(name);
+		ImageIcon icn = icons.get(name);
 		if (icn != null)
 			return icn;
 		icn = loadIcon(name);
