@@ -2,7 +2,9 @@ package ratson.genimageexplorer.generators.janino;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.codehaus.commons.compiler.CompileException;
+import org.codehaus.janino.CompileException;
+import org.codehaus.janino.Parser.ParseException;
+import org.codehaus.janino.Scanner.ScanException;
 import org.codehaus.janino.ScriptEvaluator;
 
 import ratson.genimageexplorer.generators.Function;
@@ -89,6 +91,12 @@ public class UniversalJaninoGenerator implements FunctionFactory {
 					);
 			
 		} catch (CompileException e) {
+			System.err.println(e.getMessage());
+			return false;
+		} catch (ParseException e) {
+			System.err.println(e.getMessage());
+			return false;
+		} catch (ScanException e) {
 			System.err.println(e.getMessage());
 			return false;
 		}
