@@ -3,16 +3,13 @@ package ratson.genimageexplorer;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.LinkedList;
 
-import nanoxml.XMLElement;
+import net.n3.nanoxml.IXMLElement;
+import net.n3.nanoxml.XMLElement;
 import ratson.genimageexplorer.generators.Renderer;
-import ratson.genimageexplorer.gui.PatternEditorControl;
 import ratson.genimageexplorer.gui.dialogs.PatternEditor;
 import ratson.utils.FloatMatrix;
 import ratson.utils.Utils;
@@ -125,18 +122,18 @@ public class EditablePattern extends ColorPattern {
 		editor.setVisible(true);
 
 	}
-	public void loadXML(XMLElement root) throws PatternFormatException{
+	public void loadXML(IXMLElement root) throws PatternFormatException{
 		if (!root.getName().equals("pattern"))
 			throw new PatternFormatException(root.toString());
-		Enumeration<XMLElement> children = (Enumeration<XMLElement>)root.enumerateChildren();
+		Enumeration<IXMLElement> children = (Enumeration<IXMLElement>)root.enumerateChildren();
 		
 		pickers.clear();
 		
 		while (children.hasMoreElements()){
-			XMLElement child = children.nextElement();
+			IXMLElement child = children.nextElement();
 			if (child.getName().equals("color")){
-				String pos = child.getStringAttribute("pos");
-				String val = child.getStringAttribute("value");
+				String pos = child.getAttribute("pos","");
+				String val = child.getAttribute("value","");
 				if (pos == null || val==null)
 					throw new PatternFormatException(child.toString());
 
@@ -161,11 +158,11 @@ public class EditablePattern extends ColorPattern {
 		updateColorTable();
 		
 	}
-	public XMLElement exportXML(){
-		XMLElement root=new XMLElement();
+	public IXMLElement exportXML(){
+		IXMLElement root=new XMLElement();
 		root.setName("pattern");
 		for (int i =0; i<getNumColors();++i){
-			XMLElement clr = new XMLElement();
+			IXMLElement clr = new XMLElement();
 			clr.setName("color");
 			clr.setAttribute("pos", String.valueOf(getPos(i)));
 			String color= String.format("%06x", new Object[]{

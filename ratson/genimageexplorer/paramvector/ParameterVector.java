@@ -12,5 +12,8 @@ public class ParameterVector implements Serializable{
 		params = new ParamInt[size];
 	}
 	
+	public int size(){ return params.length; }
+	public ParamBase get(int idx){ return params[idx]; };
+	public String getName(int idx){ return get(idx).getName(); };
 	
 }

@@ -1,15 +1,15 @@
 package ratson.genimageexplorer.gui;
 
-import nanoxml.XMLElement;
+import net.n3.nanoxml.IXMLElement;
 
 public class RendererRecord {
 
 	public String name;
 	public String decscription;
 	public String className;
-	public XMLElement params;
+	public IXMLElement params;
 
-	public RendererRecord(String name, String description, String className, XMLElement params) {
+	public RendererRecord(String name, String description, String className, IXMLElement params) {
 		this.name=name;
 		this.decscription=description;
 		this.className=className;

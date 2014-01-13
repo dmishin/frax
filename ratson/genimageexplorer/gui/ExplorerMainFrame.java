@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,14 +38,16 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 
-import nanoxml.XMLElement;
-import nanoxml.XMLParseException;
+import net.n3.nanoxml.IXMLElement;
+import net.n3.nanoxml.XMLElement;
+import net.n3.nanoxml.XMLException;
+import net.n3.nanoxml.XMLParseException;
+import net.n3.nanoxml.XMLWriter;
 import ratson.genimageexplorer.ColorPattern;
 import ratson.genimageexplorer.ObservationArea;
 import ratson.genimageexplorer.RenderingChain;
 import ratson.genimageexplorer.XMLFormatException;
 import ratson.genimageexplorer.generators.FunctionFactory;
-import ratson.genimageexplorer.generators.Renderer;
 import ratson.genimageexplorer.generators.RendererException;
 import ratson.genimageexplorer.gui.dialogs.ResolutionSetterDlg;
 import ratson.genimageexplorer.gui.mousetools.AbstractMouseTool;
@@ -56,6 +57,7 @@ import ratson.genimageexplorer.gui.mousetools.RotateMouseTool;
 import ratson.genimageexplorer.gui.mousetools.ZoomMouseTool;
 import ratson.genimageexplorer.gui.reflection.GUIBuilderException;
 import ratson.genimageexplorer.gui.reflection.SwingXMLGuiBuilder;
+import ratson.utils.NanoXML;
 import ratson.utils.SwingInwoker;
 
 public class ExplorerMainFrame extends JFrame {
@@ -213,8 +215,8 @@ public class ExplorerMainFrame extends JFrame {
 		System.err.println("No such renderer:"+patternName);
 	}
 	/**exports current location and fractal settings*/
-	private XMLElement exportLocation(){
-		XMLElement root = new XMLElement();
+	private IXMLElement exportLocation(){
+		IXMLElement root = new XMLElement();
 		root.setName("view");
 		
 		root.addChild(location.exportXML());
@@ -223,12 +225,12 @@ public class ExplorerMainFrame extends JFrame {
 	}
 	
 	/**Imports location from XML file*/
-	private void importLocation(XMLElement root) throws XMLFormatException{
-		if (!root.getName().equals("view"))
+	private void importLocation(IXMLElement xml) throws XMLFormatException{
+		if (!xml.getName().equals("view"))
 			throw new XMLFormatException("Root element must be <view>");
-		Enumeration children = root.enumerateChildren();
+		Enumeration children = xml.enumerateChildren();
 		while (children.hasMoreElements()){
-			XMLElement child = (XMLElement)children.nextElement();
+			IXMLElement child = (IXMLElement)children.nextElement();
 			if (child.getName().equals("location")){
 				location.importXML(child);
 				continue;
@@ -248,7 +250,8 @@ public class ExplorerMainFrame extends JFrame {
 			File file = fc.getSelectedFile();
 			System.out.println("Saving current location in XML format");
 			Writer fw = new FileWriter(file);
-			exportLocation().write(fw);
+			XMLWriter xw = new XMLWriter(fw);
+			xw.write(exportLocation());
 			fw.close();
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(this, "Failed to save file.\n"+e.getMessage());
@@ -263,11 +266,7 @@ public class ExplorerMainFrame extends JFrame {
 		    // Load from XML
 			File file = fc.getSelectedFile();
 			System.out.println("Reading location from XML format");
-			Reader rd = new FileReader(file);
-			XMLElement xml = new XMLElement();
-			xml.parseFromReader(rd);
-			rd.close();
-			
+			IXMLElement xml = NanoXML.parseFile(file);			
 			importLocation(xml);
 			
 			render();//when location loaded, rendering it;
@@ -275,6 +274,10 @@ public class ExplorerMainFrame extends JFrame {
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(this, "Failed to read file.\n"+e.getMessage());
 		} catch (XMLFormatException e) {
+			JOptionPane.showMessageDialog(this, "Failed to parse location XML.\n"+e.getMessage());
+		} catch (XMLException e) {
+			JOptionPane.showMessageDialog(this, "Failed to parse location XML.\n"+e.getMessage());
+		} catch (IllegalAccessException e) {
 			JOptionPane.showMessageDialog(this, "Failed to parse location XML.\n"+e.getMessage());
 		}
 	}
@@ -284,13 +287,13 @@ public class ExplorerMainFrame extends JFrame {
 		setResolution(400, 400);
 
 
+		IXMLElement xml = null;
 		//reading renderers description
-		XMLElement xml = new XMLElement();
 		try {
 			
 			InputStream data = getClass().getResourceAsStream("/renderers.xml");
 			Reader fs = new InputStreamReader(data,"UTF-8");
-			xml.parseFromReader(fs);
+			xml = NanoXML.parseStream(fs);
 			fs.close();
 			data.close();
 		} catch (FileNotFoundException e) {
@@ -299,7 +302,12 @@ public class ExplorerMainFrame extends JFrame {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (XMLException e) {
+			e.printStackTrace();
 		}
+		if (xml == null) return;
 		
 		if (!xml.getName().equals("package")){
 			System.err.println("Error parsing xml, package expected");
@@ -307,7 +315,7 @@ public class ExplorerMainFrame extends JFrame {
 		}
 		Enumeration children = xml.enumerateChildren();
 		while(children.hasMoreElements()){
-			XMLElement child = (XMLElement) children.nextElement();
+			IXMLElement child = (IXMLElement) children.nextElement();
 			if (child.getName().equals("renderer")){
 				registerRenderer(child);
 				continue;
@@ -324,7 +332,7 @@ public class ExplorerMainFrame extends JFrame {
 	}
 
 
-	private void registerPattern(XMLElement child) {
+	private void registerPattern(IXMLElement child) {
 		try{
 			PatternRecord rcd = new PatternRecord(child);
 			registeredPatterns.add(rcd);
@@ -333,13 +341,13 @@ public class ExplorerMainFrame extends JFrame {
 		}
 	}
 
-	private void registerRenderer(XMLElement xml) {
+	private void registerRenderer(IXMLElement xml) {
 		String name=null,description=null, className = null;
-		XMLElement params=null;
+		IXMLElement params=null;
 		
 		Enumeration children = xml.enumerateChildren();
 		while (children.hasMoreElements()){
-			XMLElement child = (XMLElement)children.nextElement();
+			IXMLElement child = (IXMLElement)children.nextElement();
 			if (child.getName().equals("name")){
 				name=child.getContent();
 				continue;

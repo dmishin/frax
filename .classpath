@@ -2,7 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="/home/dim/Soft/janino-2.5.15/lib/janino.jar" sourcepath="/home/dim/soft/janino-2.5.15/src"/>
-	<classpathentry exported="true" kind="lib" path="/home/dim/Dropbox/Soft/jfrac/nanoxml-lite-2.2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/janino.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/nanoxml-2.2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-compiler.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

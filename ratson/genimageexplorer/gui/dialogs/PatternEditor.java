@@ -28,20 +28,24 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
 
-import nanoxml.XMLElement;
-import nanoxml.XMLParseException;
+import net.n3.nanoxml.XMLElement;
+import net.n3.nanoxml.IXMLElement;
+import net.n3.nanoxml.XMLException;
+import net.n3.nanoxml.XMLParseException;
+import net.n3.nanoxml.XMLWriter;
 import ratson.genimageexplorer.EditablePattern;
 import ratson.genimageexplorer.PatternFormatException;
 import ratson.genimageexplorer.gui.PatternEditorControl;
+import ratson.utils.NanoXML;
 
 @SuppressWarnings("serial")
 public class PatternEditor extends JDialog{
 	
 	PatternEditorControl editor;
 	EditablePattern pattern;
-	XMLElement systemPatterns;
-	XMLElement userPatterns;
-	XMLElement currentPattern;
+	IXMLElement systemPatterns;
+	IXMLElement userPatterns;
+	IXMLElement currentPattern;
 	private JComboBox<ListItem> patternList;
 	private JButton btnSave;
 	private JButton btnCancel;
@@ -68,13 +72,14 @@ public class PatternEditor extends JDialog{
 		bindEvents();
 	}
 	private void saveUserPatterns(){
-		if (userPatterns == null || userPatterns.countChildren() == 0)
+		if (userPatterns == null || userPatterns.getChildrenCount() == 0)
 			return;//nothing to save
 		try{
 			System.out.println("SAving user patterns");
 			FileOutputStream fow = new FileOutputStream("user-patterns.xml");
 			OutputStreamWriter osw = new OutputStreamWriter(fow, "UTF-8");
-			userPatterns.write(osw);
+			XMLWriter xw = new XMLWriter(osw);
+			xw.write(userPatterns);
 			osw.close();
 			fow.close();
 		}catch (IOException e){
@@ -161,7 +166,7 @@ public class PatternEditor extends JDialog{
 		
 		btnSave.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				XMLElement elt = editor.getPattern().exportXML();
+				IXMLElement elt = editor.getPattern().exportXML();
 				//Request name from user
 				String newName = JOptionPane.showInputDialog(null, "Enter the name of the pattern", "Pattern name");
 				if (newName != null){
@@ -183,11 +188,11 @@ public class PatternEditor extends JDialog{
 		// TODO Auto-generated method stub
 		
 	}
-	private XMLElement readFile(String name) throws PatternFormatException{
+	private IXMLElement readFile(String name) throws PatternFormatException{
 		try {
 			Reader r;
 			r = new InputStreamReader(new FileInputStream(name),"UTF-8");
-			XMLElement element = readFile(r);
+			IXMLElement element = readFile(r);
 			r.close();
 			return element;
 		} catch (UnsupportedEncodingException e) {
@@ -198,16 +203,18 @@ public class PatternEditor extends JDialog{
 			throw new PatternFormatException("XML file read IO error");
 		}
 	}
-	private XMLElement readFile(Reader file) throws PatternFormatException{
-		XMLElement element;
+	private IXMLElement readFile(Reader file) throws PatternFormatException{
+		IXMLElement element;
 		try {
-			element = new XMLElement();
-			element.parseFromReader(file);
-
+			element = NanoXML.parseStream(file);
 		} catch (XMLParseException e) {
 			throw new PatternFormatException("XML is incorrect");
 		} catch (IOException e) {
 			throw new PatternFormatException("File is not readable");
+		} catch (IllegalAccessException e) {
+			throw new PatternFormatException("File is not readable");
+		} catch (XMLException e) {
+			throw new PatternFormatException("XML is incorrect");
 		}
 		if (!element.getName().equals("patterns"))
 			throw new PatternFormatException("Top level element must be <patterns>");
@@ -264,8 +271,8 @@ public class PatternEditor extends JDialog{
 	
 	class ListItem{
 		public String name;
-		public XMLElement data;
-		public ListItem(String n, XMLElement d){
+		public IXMLElement data;
+		public ListItem(String n, IXMLElement d){
 			name = n;
 			data = d;
 		}
@@ -273,12 +280,12 @@ public class PatternEditor extends JDialog{
 			return name;
 		}
 	}
-	private void populatePatternList(XMLElement source) {
+	private void populatePatternList(IXMLElement source) {
 		Enumeration e = source.enumerateChildren();
 		while (e.hasMoreElements()){
-			XMLElement c = (XMLElement)e.nextElement();
+			IXMLElement c = (IXMLElement)e.nextElement();
 			if (c.getName().equals("pattern"));{
-				String name = c.getStringAttribute("name");
+				String name = c.getAttribute("name", null);
 				if (name==null) name = "unnamed";
 				patternList.addItem(new ListItem(name, c));
 			}

@@ -3,7 +3,8 @@ package ratson.genimageexplorer;
 import java.io.Serializable;
 import java.util.Enumeration;
 
-import nanoxml.XMLElement;
+import net.n3.nanoxml.IXMLElement;
+import net.n3.nanoxml.XMLElement;
 import ratson.utils.DoubleMatrix;
 
 @SuppressWarnings("serial")
@@ -203,19 +204,19 @@ public class ObservationArea implements Serializable{
 	}
 	
 	/**exports contents of observation point to XML*/
-	public XMLElement exportXML(){
+	public IXMLElement exportXML(){
 
-		XMLElement root = new XMLElement();
+		IXMLElement root = new XMLElement();
 		root.setName("location");
-		XMLElement mtx = new XMLElement();
+		IXMLElement mtx = new XMLElement();
 		mtx.setName("matrix");
 		root.addChild(mtx);
 		for (int i=0;i<3;++i){
-			XMLElement row = new XMLElement();
+			IXMLElement row = new XMLElement();
 			mtx.addChild(row);
 			row.setName("row");
 			for (int j =0; j<3;++j){
-				XMLElement col = new XMLElement();
+				IXMLElement col = new XMLElement();
 				row.addChild(col);
 				col.setName("col");
 				String content = String.valueOf(transform.get(i, j));
@@ -224,12 +225,12 @@ public class ObservationArea implements Serializable{
 		}
 		return root;
 	}
-	public void importXML(XMLElement xml) throws XMLFormatException{
+	public void importXML(IXMLElement xml) throws XMLFormatException{
 		if (!xml.getName().equals("location"))
 			throw new XMLFormatException("Root node nust be <location>");
 		Enumeration ch = xml.enumerateChildren();
 		while (ch.hasMoreElements()){
-			XMLElement child = (XMLElement)ch.nextElement();
+			IXMLElement child = (IXMLElement)ch.nextElement();
 			if (child.getName().equals("matrix")){
 				importXMLMatrix(child);
 				return;
@@ -240,20 +241,20 @@ public class ObservationArea implements Serializable{
 
 
 
-	private void importXMLMatrix(XMLElement child) throws XMLFormatException {
-		if (child.countChildren() != 3)
+	private void importXMLMatrix(IXMLElement child) throws XMLFormatException {
+		if (child.getChildrenCount() != 3)
 			throw new XMLFormatException("Matrix must have 3 rows");
 		int i = 0;
 		Enumeration rows = child.enumerateChildren();
 		
 		while (rows.hasMoreElements()){
-			XMLElement row = (XMLElement)rows.nextElement();
-			if (row.countChildren()!=3)
+			IXMLElement row = (IXMLElement)rows.nextElement();
+			if (row.getChildrenCount()!=3)
 				throw new XMLFormatException("Row must have 3 columns");
 			int j = 0;
 			Enumeration els = row.enumerateChildren();
 			while (els.hasMoreElements()){
-				XMLElement elt = (XMLElement)els.nextElement();
+				IXMLElement elt = (IXMLElement)els.nextElement();
 				double val;
 				try{
 					val = Double.parseDouble(elt.getContent());					

@@ -16,7 +16,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import nanoxml.XMLElement;
+import net.n3.nanoxml.IXMLElement;
 import ratson.genimageexplorer.ColorPicker;
 import ratson.genimageexplorer.EditablePattern;
 import ratson.genimageexplorer.PatternFormatException;
@@ -274,7 +274,7 @@ public class PatternEditorControl extends JPanel {
 		repaint();
 	}
 
-	public void loadXML(XMLElement data) throws PatternFormatException {
+	public void loadXML(IXMLElement data) throws PatternFormatException {
 		pattern.loadXML(data);
 		updateColorBar();
 		repaint();

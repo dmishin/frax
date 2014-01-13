@@ -31,7 +31,7 @@ import javax.swing.event.DocumentListener;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import nanoxml.*;
+import net.n3.nanoxml.*;
 
 public class SwingXMLGuiBuilder {
 	/**Creates GUI controls for given object, using specified XML description
@@ -40,13 +40,13 @@ public class SwingXMLGuiBuilder {
 	 * @param onUpdate Executed, when the value is updated. Code is executed in the thread, called update
 	 * @throws GUIBuilderException 
 	 */
-	public void build(Object object, Container location, XMLElement xml, Runnable onUpdate) throws GUIBuilderException{
+	public void build(Object object, Container location, IXMLElement xml, Runnable onUpdate) throws GUIBuilderException{
 		if (!xml.getName().equals("parameters") && !xml.getName().equals("group")){
 			throw new GUIBuilderException("Top level tag if XML must be <controls>. Parse failed.");
 		}
 		Enumeration children = xml.enumerateChildren();
 		while (children.hasMoreElements()){
-			XMLElement child = (XMLElement) children.nextElement();
+			IXMLElement child = (IXMLElement) children.nextElement();
 			String childName = child.getName();
 			
 			if (childName.equals("int")){
@@ -80,9 +80,9 @@ public class SwingXMLGuiBuilder {
 		}
 	}
 
-	private void buildGroup(Object object, Container location, XMLElement child, Runnable onUpdate) throws GUIBuilderException {
+	private void buildGroup(Object object, Container location, IXMLElement child, Runnable onUpdate) throws GUIBuilderException {
 		Box b=Box.createVerticalBox();
-		String name = child.getStringAttribute("name");
+		String name = child.getAttribute("name", null);
 		if (name!=null){
 			b.setBorder(new TitledBorder(name));
 		}else{
@@ -93,11 +93,11 @@ public class SwingXMLGuiBuilder {
 		build(object, b, child,onUpdate);
 	}
 
-	private void buildPush(final Object object, Container location, XMLElement child, final Runnable onUpdate) {
+	private void buildPush(final Object object, Container location, IXMLElement child, final Runnable onUpdate) {
 		String name =child.getContent();
 		if (name == null) name ="";
 
-		String handler=child.getStringAttribute("action");
+		String handler=child.getAttribute("action", null);
 		if (handler == null) return ;
 		Method handlerMethod=null;
 		try {
@@ -132,13 +132,13 @@ public class SwingXMLGuiBuilder {
 	private static void call(Runnable r){
 		if (r!=null) r.run();
 	}
-	private StringParameter buildOption(Object object, Container location, XMLElement node, final Runnable onUpdate) throws GUIBuilderException {
+	private StringParameter buildOption(Object object, Container location, IXMLElement node, final Runnable onUpdate) throws GUIBuilderException {
 		// TODO Auto-generated method stub
 		String name=null;
 		LinkedList options = new LinkedList();
 		Enumeration children = node.enumerateChildren();
 		while(children.hasMoreElements()){
-			XMLElement child = (XMLElement) children.nextElement();
+			IXMLElement child = (IXMLElement) children.nextElement();
 			if (child.getName().equals("title"))
 				name = child.getContent();
 			if (child.getName().equals("value"))
@@ -190,7 +190,7 @@ public class SwingXMLGuiBuilder {
 		return param;
 	}
 
-	private BoolParameter buildBoolean(Object object, Container location, XMLElement child, Runnable onUpdate) throws GUIBuilderException {
+	private BoolParameter buildBoolean(Object object, Container location, IXMLElement child, Runnable onUpdate) throws GUIBuilderException {
 		String name =child.getContent();
 		if (name == null) name ="";
 
@@ -235,7 +235,7 @@ public class SwingXMLGuiBuilder {
 		where.add(check);			
 	}
 
-	private DoubleParameter buildDouble(Object object, Container location, XMLElement child, Runnable onUpdate) throws GUIBuilderException {
+	private DoubleParameter buildDouble(Object object, Container location, IXMLElement child, Runnable onUpdate) throws GUIBuilderException {
 		String name =child.getContent();
 		if (name == null) name ="";
 
@@ -251,7 +251,7 @@ public class SwingXMLGuiBuilder {
 			return null;
 		}
 		//determine control type
-		String ctype = child.getStringAttribute("control");
+		String ctype = child.getAttribute("control", null);
 		if (ctype == null){
 			ctype = "field";
 		}
@@ -406,7 +406,7 @@ public class SwingXMLGuiBuilder {
 
 	}
 
-	private IntParameter buildInt(Object object, Container location, XMLElement child, Runnable onUpdate) throws GUIBuilderException {
+	private IntParameter buildInt(Object object, Container location, IXMLElement child, Runnable onUpdate) throws GUIBuilderException {
 		String name =child.getContent();
 		if (name == null) name ="";
 
@@ -424,7 +424,7 @@ public class SwingXMLGuiBuilder {
 		}
 
 		//determine control type
-		String ctype = child.getStringAttribute("control");
+		String ctype = child.getAttribute("control", null);
 		if (ctype == null){
 			ctype = "field";
 		}
@@ -501,8 +501,8 @@ public class SwingXMLGuiBuilder {
 		return param;
 	}
 
-	private double readDoubleAttr(String attrName, XMLElement node, double defValue) throws GUIBuilderException {
-		String val = node.getStringAttribute(attrName);
+	private double readDoubleAttr(String attrName, IXMLElement node, double defValue) throws GUIBuilderException {
+		String val = node.getAttribute(attrName, null);
 		if (val == null)
 			return defValue;
 		try{
@@ -512,8 +512,8 @@ public class SwingXMLGuiBuilder {
 		}
 	}
 
-	private int readIntAttr(String attrName, XMLElement node, int defValue) throws GUIBuilderException {
-		String val = node.getStringAttribute(attrName);
+	private int readIntAttr(String attrName, IXMLElement node, int defValue) throws GUIBuilderException {
+		String val = node.getAttribute(attrName, null);
 		if (val == null)
 			return defValue;
 		try{
@@ -524,10 +524,10 @@ public class SwingXMLGuiBuilder {
 	}
 
 	/**returns array of 2 strings, containing getter and setter name*/
-	private String[] getGetterAndSetter(XMLElement elt) throws GUIBuilderException{
-		String getter = elt.getStringAttribute("get");
-		String setter = elt.getStringAttribute("set");
-		String basename = elt.getStringAttribute("name");
+	private String[] getGetterAndSetter(IXMLElement elt) throws GUIBuilderException{
+		String getter = elt.getAttribute("get", null);
+		String setter = elt.getAttribute("set", null);
+		String basename = elt.getAttribute("name", null);
 		if (getter == null && setter ==null){
 			if (basename == null){
 				throw new GUIBuilderException("Getter, setter and basename are not specified. Can not create interface");

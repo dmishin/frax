@@ -6,5 +6,4 @@ public class ParamDouble extends ParamBase {
 	public String toString() {
 		return String.format("dbl:{%g}", value);
 	}
-
 }
